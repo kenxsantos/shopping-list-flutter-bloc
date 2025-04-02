@@ -1,54 +1,58 @@
 import 'package:dartactivity/shopping/utils/enum_tags.dart';
+import 'package:dartactivity/shopping/utils/shopping_helper.dart';
 import 'package:flutter/material.dart';
 
-class GroceryChips extends StatefulWidget {
-  const GroceryChips({super.key});
-
+class GroceryChip extends StatefulWidget {
+  const GroceryChip({required this.onCategorySelected, super.key});
+  final void Function(GroceryCategory? selectedCategory) onCategorySelected;
   @override
-  _GroceryChipsState createState() => _GroceryChipsState();
+  State<GroceryChip> createState() => _GroceryChipState();
 }
 
-class _GroceryChipsState extends State<GroceryChips> {
-  final TextEditingController _textFieldController = TextEditingController();
-
+class _GroceryChipState extends State<GroceryChip> {
+  GroceryCategory? selectedCategory;
+  final ShoppingHelper helper = ShoppingHelper();
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        // TextField to display the selected category
-        Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: TextField(
-            controller: _textFieldController,
-            decoration: InputDecoration(
-              labelText: 'Selected Category',
-              border: OutlineInputBorder(),
-            ),
-          ),
-        ),
+    final TextTheme textTheme = Theme.of(context).textTheme;
 
-        // Chips to list GroceryCategory items
-        Wrap(
-          spacing: 8.0, // Space between chips
-          runSpacing: 4.0, // Space between rows of chips
-          children:
-              GroceryCategory.values.map((category) {
-                return ActionChip(
-                  label: Text(
-                    category
-                        .toString()
-                        .split('.')
-                        .last, // Display category name without enum prefix
-                  ),
-                  onPressed: () {
-                    // Set the selected chip value to TextField
-                    _textFieldController.text =
-                        category.toString().split('.').last;
-                  },
-                );
-              }).toList(),
-        ),
-      ],
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          SizedBox(height: 10),
+          Text('Choose a Category', style: textTheme.labelLarge),
+          const SizedBox(height: 5.0),
+
+          Wrap(
+            spacing: 5.0,
+            children:
+                GroceryCategory.values.map((GroceryCategory grocery) {
+                  return FilterChip(
+                    selectedColor: Colors.grey,
+                    backgroundColor: Colors.greenAccent,
+                    label: Text(
+                      (helper.formatCategory(grocery)),
+                      style: TextStyle(fontSize: 12),
+                    ),
+                    selected: selectedCategory == grocery,
+                    onSelected: (bool isSelected) {
+                      setState(() {
+                        if (isSelected) {
+                          selectedCategory = grocery; // Set selected category
+                          widget.onCategorySelected(selectedCategory);
+                        } else {
+                          selectedCategory = null; // Clear selection
+                          widget.onCategorySelected(null);
+                        }
+                      });
+                    },
+                  );
+                }).toList(),
+          ),
+          const SizedBox(height: 10.0),
+        ],
+      ),
     );
   }
 }

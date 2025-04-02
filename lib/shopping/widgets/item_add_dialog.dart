@@ -1,7 +1,10 @@
+import 'package:dartactivity/shopping/utils/enum_tags.dart';
+import 'package:dartactivity/shopping/utils/shopping_helper.dart';
+import 'package:dartactivity/shopping/widgets/grocery_chip.dart';
 import 'package:flutter/material.dart';
 
 class ItemDialog extends StatefulWidget {
-  final void Function(String, String) onSubmit;
+  final void Function(String item, String tag) onSubmit;
 
   const ItemDialog({required this.onSubmit, super.key});
 
@@ -11,13 +14,14 @@ class ItemDialog extends StatefulWidget {
 
 class _ItemDialogState extends State<ItemDialog> {
   final String date = DateTime.now().toString();
-  final TextEditingController _tagController = TextEditingController();
+
+  GroceryCategory? selectedCategory;
   final TextEditingController _itemController = TextEditingController();
 
   @override
   void dispose() {
     _itemController.dispose();
-    _tagController.dispose();
+
     super.dispose();
   }
 
@@ -34,10 +38,12 @@ class _ItemDialogState extends State<ItemDialog> {
             controller: _itemController,
             decoration: InputDecoration(labelText: 'Enter an Item'),
           ),
-          TextField(
-            controller: _tagController,
-            readOnly: false,
-            decoration: InputDecoration(labelText: 'Enter a Tag'),
+          GroceryChip(
+            onCategorySelected: (GroceryCategory? category) {
+              setState(() {
+                selectedCategory = category;
+              });
+            },
           ),
         ],
       ),
@@ -48,13 +54,25 @@ class _ItemDialogState extends State<ItemDialog> {
         ),
         ElevatedButton(
           onPressed: () {
-            if (_itemController.text.isNotEmpty &&
-                _tagController.text.isNotEmpty) {
-              widget.onSubmit(_itemController.text, _tagController.text);
+            if (_itemController.text.isNotEmpty && selectedCategory != null) {
+              widget.onSubmit(
+                _itemController.text,
+                ShoppingHelper().formatCategory(selectedCategory!),
+              );
+              Navigator.of(context).pop();
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text('Added Successfully'),
+                  duration: Duration(seconds: 2),
+                ),
+              );
             } else {
-              ScaffoldMessenger.of(
-                context,
-              ).showSnackBar(SnackBar(content: Text('Item cannot be empty!')));
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text('Fields cannot be empty!'),
+                  duration: Duration(seconds: 2),
+                ),
+              );
             }
           },
           child: Text('Submit'),

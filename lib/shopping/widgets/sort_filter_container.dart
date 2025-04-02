@@ -20,10 +20,9 @@ class SortFilterContainer extends StatelessWidget {
             label: "Sort",
             icon: Icons.swap_vert,
           ),
-
           SortFilterButton(
             onTap: () {
-              // _showFilterMenu(context);
+              SortingRepository().showFilterMenu(context);
             },
             label: "Filter",
             icon: Icons.filter_alt,
@@ -33,42 +32,3 @@ class SortFilterContainer extends StatelessWidget {
     );
   }
 }
-
-// void _showFilterMenu(BuildContext context) {
-//   showMenu(
-//     context: context,
-//     position: RelativeRect.fromLTRB(100, 130, 60, 0),
-//     items: [
-//       PopupMenuItem(
-//         value: 'name',
-//         child: Row(
-//           children: [
-//             Icon(Icons.sort_by_alpha, size: 18),
-//             SizedBox(width: 5),
-//             Text('Name'),
-//           ],
-//         ),
-//       ),
-//       PopupMenuItem(
-//         value: 'date',
-//         child: Row(
-//           children: [
-//             Icon(Icons.today, size: 18),
-//             SizedBox(width: 5),
-//             Text('Date'),
-//           ],
-//         ),
-//       ),
-//       PopupMenuItem(
-//         value: 'tag',
-//         child: Row(
-//           children: [
-//             Icon(Icons.category, size: 18),
-//             SizedBox(width: 5),
-//             Text('Tag'),
-//           ],
-//         ),
-//       ),
-//     ],
-//   );
-// }

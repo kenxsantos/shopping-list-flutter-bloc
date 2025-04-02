@@ -28,9 +28,10 @@ class _ItemTileState extends State<ItemTile> {
       contentPadding: EdgeInsets.all(16),
       title: Text(widget.name),
       subtitle: Text(
-        widget.id,
-        style: TextStyle(color: Colors.blueGrey, fontSize: 12),
+        widget.tag,
+        style: TextStyle(fontSize: 12, color: Colors.green),
       ),
+
       trailing: PopupMenuButton<String>(
         itemBuilder:
             (BuildContext context) => <PopupMenuEntry<String>>[

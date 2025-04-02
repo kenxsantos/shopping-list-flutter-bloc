@@ -1,5 +1,5 @@
 enum GroceryCategory {
-  fruitsAndVegatable,
+  fruitsAndVegetable,
   dairyProducts,
   poultry,
   breadAndGrains,
