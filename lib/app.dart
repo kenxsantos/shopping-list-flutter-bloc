@@ -1,4 +1,5 @@
 import 'package:dartactivity/shopping/bloc/shopping_bloc.dart';
+import 'package:dartactivity/shopping/repositories/shopping_repository.dart';
 import 'package:dartactivity/shopping/screens/shopping_home.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -10,7 +11,7 @@ class App extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (_) => ShoppingBloc(),
+      create: (_) => ShoppingBloc(ShoppingRepository()),
       child: MaterialApp(
         title: 'Shopping List',
         theme: ThemeData(textTheme: GoogleFonts.poppinsTextTheme()),

@@ -11,6 +11,7 @@ class ItemDialog extends StatefulWidget {
 
 class _ItemDialogState extends State<ItemDialog> {
   final String date = DateTime.now().toString();
+  final TextEditingController _tagController = TextEditingController();
   final TextEditingController _itemController = TextEditingController();
 
   @override
@@ -22,7 +23,7 @@ class _ItemDialogState extends State<ItemDialog> {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: Text('Shopping List'),
+      title: Text('Add an Item', textAlign: TextAlign.center),
       content: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
@@ -31,6 +32,11 @@ class _ItemDialogState extends State<ItemDialog> {
           TextField(
             controller: _itemController,
             decoration: InputDecoration(labelText: 'Enter an Item'),
+          ),
+          TextField(
+            controller: _tagController,
+            readOnly: false,
+            decoration: InputDecoration(labelText: 'Enter an Tag'),
           ),
         ],
       ),
@@ -41,8 +47,10 @@ class _ItemDialogState extends State<ItemDialog> {
         ),
         ElevatedButton(
           onPressed: () {
-            if (_itemController.text.isNotEmpty) {
+            if (_itemController.text.isNotEmpty &&
+                _tagController.text.isNotEmpty) {
               widget.onSubmit(_itemController.text);
+              widget.onSubmit(_tagController.text);
             } else {
               ScaffoldMessenger.of(
                 context,

@@ -3,11 +3,13 @@ import 'package:flutter/material.dart';
 class EditDialog extends StatelessWidget {
   final String id;
   final String currentValue;
+  final String tag;
   final void Function(String newValue) onSave;
 
   const EditDialog({
     super.key,
     required this.id,
+    required this.tag,
     required this.currentValue,
     required this.onSave,
   });

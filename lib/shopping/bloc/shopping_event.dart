@@ -10,7 +10,8 @@ class ShoppingAddItem extends ShoppingEvent {
 class ShoppingUpdateItem extends ShoppingEvent {
   final String id;
   final String newName;
-  ShoppingUpdateItem(this.id, this.newName);
+  final String newTag;
+  ShoppingUpdateItem(this.id, this.newName, this.newTag);
 }
 
 class ShoppingDeleteItem extends ShoppingEvent {
@@ -19,3 +20,7 @@ class ShoppingDeleteItem extends ShoppingEvent {
 }
 
 class ShoppingFetchItem extends ShoppingEvent {}
+
+class ShoppingSortByName extends ShoppingEvent {}
+
+class ShoppingSortByDate extends ShoppingEvent {}

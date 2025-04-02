@@ -6,9 +6,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class ItemTile extends StatefulWidget {
-  const ItemTile({required this.id, required this.name, super.key});
+  const ItemTile({
+    required this.id,
+    required this.name,
+    required this.tag,
+    super.key,
+  });
 
   final String name;
+  final String tag;
   final String id;
 
   @override
@@ -21,6 +27,10 @@ class _ItemTileState extends State<ItemTile> {
     return ListTile(
       contentPadding: EdgeInsets.all(16),
       title: Text(widget.name),
+      subtitle: Text(
+        widget.id,
+        style: TextStyle(color: Colors.blueGrey, fontSize: 12),
+      ),
       trailing: PopupMenuButton<String>(
         itemBuilder:
             (BuildContext context) => <PopupMenuEntry<String>>[
@@ -31,6 +41,7 @@ class _ItemTileState extends State<ItemTile> {
                 child: Row(
                   children: [
                     Icon(Icons.edit_square, color: Colors.blue),
+                    SizedBox(width: 5),
                     Text('Edit'),
                   ],
                 ),
@@ -42,6 +53,7 @@ class _ItemTileState extends State<ItemTile> {
                 child: Row(
                   children: [
                     Icon(Icons.delete, color: Colors.red),
+                    SizedBox(width: 5),
                     Text('Delete'),
                   ],
                 ),
@@ -58,9 +70,10 @@ class _ItemTileState extends State<ItemTile> {
           (context) => EditDialog(
             id: widget.id,
             currentValue: widget.name,
+            tag: widget.tag,
             onSave: (newValue) {
               context.read<ShoppingBloc>().add(
-                ShoppingUpdateItem(widget.id, newValue),
+                ShoppingUpdateItem(widget.id, newValue, widget.tag),
               );
             },
           ),
