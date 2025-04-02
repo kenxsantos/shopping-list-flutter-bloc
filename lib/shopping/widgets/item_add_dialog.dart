@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class ItemDialog extends StatefulWidget {
-  final void Function(String) onSubmit;
+  final void Function(String, String) onSubmit;
 
   const ItemDialog({required this.onSubmit, super.key});
 
@@ -17,6 +17,7 @@ class _ItemDialogState extends State<ItemDialog> {
   @override
   void dispose() {
     _itemController.dispose();
+    _tagController.dispose();
     super.dispose();
   }
 
@@ -36,7 +37,7 @@ class _ItemDialogState extends State<ItemDialog> {
           TextField(
             controller: _tagController,
             readOnly: false,
-            decoration: InputDecoration(labelText: 'Enter an Tag'),
+            decoration: InputDecoration(labelText: 'Enter a Tag'),
           ),
         ],
       ),
@@ -49,8 +50,7 @@ class _ItemDialogState extends State<ItemDialog> {
           onPressed: () {
             if (_itemController.text.isNotEmpty &&
                 _tagController.text.isNotEmpty) {
-              widget.onSubmit(_itemController.text);
-              widget.onSubmit(_tagController.text);
+              widget.onSubmit(_itemController.text, _tagController.text);
             } else {
               ScaffoldMessenger.of(
                 context,

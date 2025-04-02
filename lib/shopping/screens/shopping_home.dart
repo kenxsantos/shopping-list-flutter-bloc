@@ -78,14 +78,13 @@ class _ShoppingHomeState extends State<ShoppingHome> {
             context: context,
             builder:
                 (context) => ItemDialog(
-                  onSubmit: (stringValue) {
+                  onSubmit: (addedItem, addedTag) {
                     final newItem = ShoppingModel(
                       id: DateTime.now().toString(),
-                      name: stringValue,
-                      tag: "test",
+                      name: addedItem,
+                      tag: addedTag,
                     );
                     context.read<ShoppingBloc>().add(ShoppingAddItem(newItem));
-                    Navigator.of(context).pop();
                   },
                 ),
           );
