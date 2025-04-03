@@ -2,6 +2,7 @@ import 'package:dartactivity/shopping/utils/enum_tags.dart';
 import 'package:dartactivity/shopping/utils/shopping_helper.dart';
 import 'package:dartactivity/shopping/widgets/grocery_chip.dart';
 import 'package:dartactivity/shopping/widgets/icon_text_button.dart';
+import 'package:dartactivity/shopping/widgets/snackbar.dart';
 import 'package:flutter/material.dart';
 
 // ignore: must_be_immutable
@@ -62,15 +63,11 @@ class _EditDialogState extends State<EditDialog> {
                 setState(() {
                   widget.currentIsFavorite = !widget.currentIsFavorite;
                 });
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                    content: Text(
-                      widget.currentIsFavorite
-                          ? 'Added to favorites'
-                          : 'Remove from favorites',
-                    ),
-                    duration: Duration(milliseconds: 500),
-                  ),
+                showSnackBarMessage(
+                  context,
+                  widget.currentIsFavorite
+                      ? 'Added to favorites'
+                      : 'Remove from favorites',
                 );
               },
               size: 20,

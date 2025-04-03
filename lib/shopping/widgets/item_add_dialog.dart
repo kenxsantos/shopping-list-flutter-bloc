@@ -2,6 +2,7 @@ import 'package:dartactivity/shopping/utils/enum_tags.dart';
 import 'package:dartactivity/shopping/utils/shopping_helper.dart';
 import 'package:dartactivity/shopping/widgets/grocery_chip.dart';
 import 'package:dartactivity/shopping/widgets/icon_text_button.dart';
+import 'package:dartactivity/shopping/widgets/snackbar.dart';
 import 'package:flutter/material.dart';
 
 class ItemDialog extends StatefulWidget {
@@ -50,15 +51,9 @@ class _ItemDialogState extends State<ItemDialog> {
                 setState(() {
                   isFavorite = !isFavorite;
                 });
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                    content: Text(
-                      isFavorite
-                          ? 'Added to favorites'
-                          : 'Remove from favorites',
-                    ),
-                    duration: Duration(milliseconds: 500),
-                  ),
+                showSnackBarMessage(
+                  context,
+                  isFavorite ? 'Added to favorites' : 'Remove from favorites',
                 );
               },
               size: 20,
@@ -95,19 +90,9 @@ class _ItemDialogState extends State<ItemDialog> {
                 isFavorite,
               );
               Navigator.of(context).pop();
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Text('Added Successfully'),
-                  duration: Duration(seconds: 2),
-                ),
-              );
+              showSnackBarMessage(context, "Added successfully!");
             } else {
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Text('Fields cannot be empty!'),
-                  duration: Duration(seconds: 2),
-                ),
-              );
+              showSnackBarMessage(context, "Fields cannot be empty!");
             }
           },
           child: Text('Submit'),

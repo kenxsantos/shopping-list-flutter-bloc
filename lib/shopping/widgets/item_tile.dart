@@ -2,6 +2,7 @@ import 'package:dartactivity/shopping/bloc/shopping_bloc.dart';
 import 'package:dartactivity/shopping/bloc/shopping_event.dart';
 import 'package:dartactivity/shopping/widgets/item_delete_dialog.dart';
 import 'package:dartactivity/shopping/widgets/item_edit_dialog.dart';
+import 'package:dartactivity/shopping/widgets/snackbar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -51,15 +52,11 @@ class _ItemTileState extends State<ItemTile> {
                   widget.isFavorite,
                 ),
               );
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Text(
-                    widget.isFavorite
-                        ? 'Added to favorites'
-                        : 'Remove from favorites',
-                  ),
-                  duration: Duration(milliseconds: 500),
-                ),
+              showSnackBarMessage(
+                context,
+                widget.isFavorite
+                    ? 'Added to favorites'
+                    : 'Remove from favorites',
               );
             },
             icon:
