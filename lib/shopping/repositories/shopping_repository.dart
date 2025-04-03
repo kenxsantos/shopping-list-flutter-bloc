@@ -12,15 +12,42 @@ class ShoppingRepository {
     _items.add(item);
   }
 
-  Future<void> updateItem(String id, String newName, String newTag) async {
+  Future<void> updateItem(
+    String id,
+    String newName,
+    String newTag,
+    bool isFavorite,
+  ) async {
     final index = _items.indexWhere((item) => item.id == id);
     if (index != -1) {
-      _items[index] = ShoppingModel(id: id, name: newName, tag: newTag);
+      _items[index] = ShoppingModel(
+        id: id,
+        name: newName,
+        tag: newTag,
+        isFavorite: isFavorite,
+      );
     }
   }
 
   Future<void> deleteItem(String id) async {
     _items.removeWhere((item) => item.id == id);
+  }
+
+  Future<void> favoriteItem(
+    String id,
+    String newName,
+    String newTag,
+    bool isFavorite,
+  ) async {
+    final index = _items.indexWhere((item) => item.id == id);
+    if (index != -1) {
+      _items[index] = ShoppingModel(
+        id: id,
+        name: newName,
+        tag: newTag,
+        isFavorite: isFavorite,
+      );
+    }
   }
 
   Future<List<ShoppingModel>> sortByName() async {

@@ -1,10 +1,11 @@
 import 'package:dartactivity/shopping/utils/enum_tags.dart';
 import 'package:dartactivity/shopping/utils/shopping_helper.dart';
 import 'package:dartactivity/shopping/widgets/grocery_chip.dart';
+import 'package:dartactivity/shopping/widgets/icon_text_button.dart';
 import 'package:flutter/material.dart';
 
 class ItemDialog extends StatefulWidget {
-  final void Function(String item, String tag) onSubmit;
+  final void Function(String item, String tag, bool isFavorite) onSubmit;
 
   const ItemDialog({required this.onSubmit, super.key});
 
@@ -17,11 +18,11 @@ class _ItemDialogState extends State<ItemDialog> {
 
   GroceryCategory? selectedCategory;
   final TextEditingController _itemController = TextEditingController();
+  bool isFavorite = false;
 
   @override
   void dispose() {
     _itemController.dispose();
-
     super.dispose();
   }
 
@@ -38,11 +39,44 @@ class _ItemDialogState extends State<ItemDialog> {
             controller: _itemController,
             decoration: InputDecoration(labelText: 'Enter an Item'),
           ),
+          SizedBox(height: 16),
+          Container(
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.all(Radius.circular(5)),
+              border: Border.all(width: 1, color: Colors.red),
+            ),
+            child: IconTextButton(
+              onTap: () {
+                setState(() {
+                  isFavorite = !isFavorite;
+                });
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text(
+                      isFavorite
+                          ? 'Added to favorites'
+                          : 'Remove from favorites',
+                    ),
+                    duration: Duration(milliseconds: 500),
+                  ),
+                );
+              },
+              size: 20,
+              label: isFavorite ? "Added to Favorites" : "Add to Favorites",
+              iconColor: Colors.red,
+              icon:
+                  isFavorite ? Icons.favorite : Icons.favorite_border_outlined,
+            ),
+          ),
+
           GroceryChip(
             onCategorySelected: (GroceryCategory? category) {
               setState(() {
                 selectedCategory = category;
               });
+
+              print("selected category: $selectedCategory");
+              print("catefory: $category");
             },
           ),
         ],
@@ -58,6 +92,7 @@ class _ItemDialogState extends State<ItemDialog> {
               widget.onSubmit(
                 _itemController.text,
                 ShoppingHelper().formatCategory(selectedCategory!),
+                isFavorite,
               );
               Navigator.of(context).pop();
               ScaffoldMessenger.of(context).showSnackBar(

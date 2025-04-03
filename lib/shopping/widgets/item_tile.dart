@@ -5,17 +5,20 @@ import 'package:dartactivity/shopping/widgets/item_edit_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+// ignore: must_be_immutable
 class ItemTile extends StatefulWidget {
-  const ItemTile({
+  ItemTile({
     required this.id,
     required this.name,
     required this.tag,
+    required this.isFavorite,
     super.key,
   });
 
   final String name;
   final String tag;
   final String id;
+  bool isFavorite;
 
   @override
   State<ItemTile> createState() => _ItemTileState();
@@ -28,38 +31,73 @@ class _ItemTileState extends State<ItemTile> {
       contentPadding: EdgeInsets.all(16),
       title: Text(widget.name),
       subtitle: Text(
-        widget.tag,
+        widget.tag.toString(),
         style: TextStyle(fontSize: 12, color: Colors.green),
       ),
 
-      trailing: PopupMenuButton<String>(
-        itemBuilder:
-            (BuildContext context) => <PopupMenuEntry<String>>[
-              PopupMenuItem(
-                onTap: () {
-                  _showEditDialog(context);
-                },
-                child: Row(
-                  children: [
-                    Icon(Icons.edit_square, color: Colors.blue),
-                    SizedBox(width: 5),
-                    Text('Edit'),
-                  ],
+      trailing: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          IconButton(
+            onPressed: () {
+              setState(() {
+                widget.isFavorite = !widget.isFavorite;
+              });
+              context.read<ShoppingBloc>().add(
+                ShoppingFavoriteItem(
+                  widget.id,
+                  widget.name,
+                  widget.tag.toString(),
+                  widget.isFavorite,
                 ),
-              ),
-              PopupMenuItem(
-                onTap: () {
-                  _showDeleteConfirmation(context);
-                },
-                child: Row(
-                  children: [
-                    Icon(Icons.delete, color: Colors.red),
-                    SizedBox(width: 5),
-                    Text('Delete'),
-                  ],
+              );
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text(
+                    widget.isFavorite
+                        ? 'Added to favorites'
+                        : 'Remove from favorites',
+                  ),
+                  duration: Duration(milliseconds: 500),
                 ),
-              ),
-            ],
+              );
+            },
+            icon:
+                widget.isFavorite
+                    ? Icon(Icons.favorite)
+                    : Icon(Icons.favorite_border_outlined),
+          ),
+
+          PopupMenuButton<String>(
+            itemBuilder:
+                (BuildContext context) => <PopupMenuEntry<String>>[
+                  PopupMenuItem(
+                    onTap: () {
+                      _showEditDialog(context);
+                    },
+                    child: Row(
+                      children: [
+                        Icon(Icons.edit_square, color: Colors.blue),
+                        SizedBox(width: 5),
+                        Text('Edit'),
+                      ],
+                    ),
+                  ),
+                  PopupMenuItem(
+                    onTap: () {
+                      _showDeleteConfirmation(context);
+                    },
+                    child: Row(
+                      children: [
+                        Icon(Icons.delete, color: Colors.red),
+                        SizedBox(width: 5),
+                        Text('Delete'),
+                      ],
+                    ),
+                  ),
+                ],
+          ),
+        ],
       ),
     );
   }
@@ -70,11 +108,12 @@ class _ItemTileState extends State<ItemTile> {
       builder:
           (context) => EditDialog(
             id: widget.id,
-            currentValue: widget.name,
-            tag: widget.tag,
-            onSave: (newValue) {
+            currentName: widget.name,
+            currentTag: widget.tag,
+            currentIsFavorite: widget.isFavorite,
+            onSave: (newName, newTag, newIsFavorite) {
               context.read<ShoppingBloc>().add(
-                ShoppingUpdateItem(widget.id, newValue, widget.tag),
+                ShoppingUpdateItem(widget.id, newName, newTag, newIsFavorite),
               );
             },
           ),

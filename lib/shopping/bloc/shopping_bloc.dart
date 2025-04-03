@@ -13,7 +13,12 @@ class ShoppingBloc extends Bloc<ShoppingEvent, ShoppingState> {
     });
 
     on<ShoppingUpdateItem>((event, emit) async {
-      await shopping.updateItem(event.id, event.newName, event.newTag);
+      await shopping.updateItem(
+        event.id,
+        event.newName,
+        event.newTag,
+        event.isFavorite,
+      );
       final items = await shopping.fetchItems();
       emit(ShoppingListLoaded(items));
     });
@@ -25,6 +30,17 @@ class ShoppingBloc extends Bloc<ShoppingEvent, ShoppingState> {
     });
 
     on<ShoppingFetchItem>((event, emit) async {
+      final items = await shopping.fetchItems();
+      emit(ShoppingListLoaded(items));
+    });
+
+    on<ShoppingFavoriteItem>((event, emit) async {
+      await shopping.favoriteItem(
+        event.id,
+        event.name,
+        event.tag,
+        event.isFavorite,
+      );
       final items = await shopping.fetchItems();
       emit(ShoppingListLoaded(items));
     });

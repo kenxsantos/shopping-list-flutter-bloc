@@ -1,8 +1,10 @@
 import 'package:dartactivity/shopping/bloc/shopping_bloc.dart';
 import 'package:dartactivity/shopping/bloc/shopping_event.dart';
+import 'package:dartactivity/shopping/bloc/shopping_state.dart';
 import 'package:dartactivity/shopping/models/shopping_model.dart';
 import 'package:dartactivity/shopping/screens/favorite_page.dart';
 import 'package:dartactivity/shopping/screens/shopping_list.dart';
+import 'package:dartactivity/shopping/utils/shopping_helper.dart';
 import 'package:dartactivity/shopping/widgets/item_add_dialog.dart';
 import 'package:dartactivity/shopping/widgets/sort_filter_container.dart';
 import 'package:flutter/material.dart';
@@ -17,14 +19,14 @@ class ShoppingHome extends StatefulWidget {
 
 class _ShoppingHomeState extends State<ShoppingHome> {
   int pageIndex = 0;
-
+  late ShoppingListLoaded list;
   final screens = [const ShoppingList(), const FavoritePage()];
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Shopping List"),
+        title: Text(pageIndex == 0 ? "Shopping List" : "Favorite List"),
         backgroundColor: Colors.white,
         foregroundColor: Colors.black,
         surfaceTintColor: Colors.white,
@@ -40,31 +42,31 @@ class _ShoppingHomeState extends State<ShoppingHome> {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              IconButton(
-                enableFeedback: false,
+              ShoppingHelper.countIconButton(
+                currentPageIndex: pageIndex,
                 icon:
                     pageIndex == 0
                         ? Icon(Icons.receipt_long, size: 26)
                         : Icon(Icons.receipt_long_outlined),
-                color: Colors.white,
                 onPressed: () {
                   setState(() {
                     pageIndex = 0;
                   });
                 },
+                showFavoritesOnly: false,
               ),
-              IconButton(
-                enableFeedback: false,
+              ShoppingHelper.countIconButton(
+                currentPageIndex: pageIndex,
                 icon:
                     pageIndex == 1
                         ? Icon(Icons.favorite, size: 26)
                         : Icon(Icons.favorite_border_outlined),
-                color: Colors.white,
                 onPressed: () {
                   setState(() {
                     pageIndex = 1;
                   });
                 },
+                showFavoritesOnly: true,
               ),
             ],
           ),
@@ -78,11 +80,16 @@ class _ShoppingHomeState extends State<ShoppingHome> {
             context: context,
             builder:
                 (context) => ItemDialog(
-                  onSubmit: (String addedItem, String addedTag) {
+                  onSubmit: (
+                    String addedItem,
+                    String addedTag,
+                    bool addedFavorite,
+                  ) {
                     final newItem = ShoppingModel(
                       id: DateTime.now().toString(),
                       name: addedItem,
                       tag: addedTag,
+                      isFavorite: addedFavorite,
                     );
                     context.read<ShoppingBloc>().add(ShoppingAddItem(newItem));
                   },

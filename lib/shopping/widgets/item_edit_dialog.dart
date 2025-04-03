@@ -1,31 +1,102 @@
+import 'package:dartactivity/shopping/utils/enum_tags.dart';
+import 'package:dartactivity/shopping/utils/shopping_helper.dart';
+import 'package:dartactivity/shopping/widgets/grocery_chip.dart';
+import 'package:dartactivity/shopping/widgets/icon_text_button.dart';
 import 'package:flutter/material.dart';
 
-class EditDialog extends StatelessWidget {
+// ignore: must_be_immutable
+class EditDialog extends StatefulWidget {
   final String id;
-  final String currentValue;
-  final String tag;
-  final void Function(String newValue) onSave;
+  String currentName;
+  String currentTag;
+  bool currentIsFavorite;
+  final void Function(String newName, String newTag, bool newIsFavorite) onSave;
 
-  const EditDialog({
+  EditDialog({
     super.key,
     required this.id,
-    required this.tag,
-    required this.currentValue,
+    required this.currentName,
+    required this.currentTag,
+    required this.currentIsFavorite,
     required this.onSave,
   });
+  @override
+  State<EditDialog> createState() => _EditDialogState();
+}
+
+class _EditDialogState extends State<EditDialog> {
+  GroceryCategory? selectedCategory;
+  late TextEditingController _editController;
+
+  @override
+  void initState() {
+    super.initState();
+    _editController = TextEditingController(text: widget.currentName);
+    selectedCategory = ShoppingHelper().stringToCategory(widget.currentTag);
+  }
+
+  @override
+  void dispose() {
+    _editController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
-    final TextEditingController _editController = TextEditingController(
-      text: currentValue,
-    );
-
     return AlertDialog(
       title: Text('Edit Item'),
-      content: TextField(
-        controller: _editController,
-        decoration: InputDecoration(labelText: 'Enter new value'),
+      content: Column(
+        children: [
+          TextField(
+            controller: _editController,
+            decoration: InputDecoration(labelText: 'Enter new value'),
+          ),
+          SizedBox(height: 16),
+          Container(
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.all(Radius.circular(5)),
+              border: Border.all(width: 1, color: Colors.red),
+            ),
+            child: IconTextButton(
+              onTap: () {
+                setState(() {
+                  widget.currentIsFavorite = !widget.currentIsFavorite;
+                });
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text(
+                      widget.currentIsFavorite
+                          ? 'Added to favorites'
+                          : 'Remove from favorites',
+                    ),
+                    duration: Duration(milliseconds: 500),
+                  ),
+                );
+              },
+              size: 20,
+              label:
+                  widget.currentIsFavorite
+                      ? "Added to Favorites"
+                      : "Add to Favorites",
+              iconColor: Colors.red,
+              icon:
+                  widget.currentIsFavorite
+                      ? Icons.favorite
+                      : Icons.favorite_border_outlined,
+            ),
+          ),
+          GroceryChip(
+            initialCategory: selectedCategory,
+            onCategorySelected: (GroceryCategory? category) {
+              setState(() {
+                selectedCategory = category;
+              });
+              print("New Selected Category: $selectedCategory");
+            },
+          ),
+        ],
       ),
+
       actions: [
         TextButton(
           onPressed: () => Navigator.of(context).pop(),
@@ -33,8 +104,12 @@ class EditDialog extends StatelessWidget {
         ),
         ElevatedButton(
           onPressed: () {
-            if (_editController.text.isNotEmpty) {
-              onSave(_editController.text);
+            if (_editController.text.isNotEmpty && selectedCategory != null) {
+              widget.onSave(
+                _editController.text,
+                ShoppingHelper().formatCategory(selectedCategory!),
+                widget.currentIsFavorite,
+              );
               Navigator.of(context).pop();
             } else {
               ScaffoldMessenger.of(

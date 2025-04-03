@@ -1,15 +1,19 @@
 import 'package:flutter/material.dart';
 
-class SortFilterButton extends StatelessWidget {
+class IconTextButton extends StatelessWidget {
   final VoidCallback onTap;
   final String label;
   final IconData icon;
+  final int size;
+  final Color iconColor;
 
-  const SortFilterButton({
+  const IconTextButton({
     super.key,
     required this.onTap,
     required this.label,
     required this.icon,
+    required this.size,
+    required this.iconColor,
   });
 
   @override
@@ -24,7 +28,7 @@ class SortFilterButton extends StatelessWidget {
           child: Row(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Icon(icon, size: 18),
+              Icon(icon, size: 18, color: iconColor),
               SizedBox(width: 4.0),
               Text(
                 label,

@@ -11,12 +11,21 @@ class ShoppingUpdateItem extends ShoppingEvent {
   final String id;
   final String newName;
   final String newTag;
-  ShoppingUpdateItem(this.id, this.newName, this.newTag);
+  final bool isFavorite;
+  ShoppingUpdateItem(this.id, this.newName, this.newTag, this.isFavorite);
 }
 
 class ShoppingDeleteItem extends ShoppingEvent {
   final String id;
   ShoppingDeleteItem(this.id);
+}
+
+class ShoppingFavoriteItem extends ShoppingEvent {
+  final String id;
+  final String name;
+  final String tag;
+  final bool isFavorite;
+  ShoppingFavoriteItem(this.id, this.name, this.tag, this.isFavorite);
 }
 
 class ShoppingFetchItem extends ShoppingEvent {}

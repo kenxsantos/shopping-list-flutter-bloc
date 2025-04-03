@@ -35,6 +35,7 @@ class _ShoppingListState extends State<ShoppingList> {
                       id: item.id,
                       name: item.name,
                       tag: item.tag,
+                      isFavorite: item.isFavorite,
                     ),
                   );
                 },
