@@ -4,8 +4,10 @@ import 'package:dartactivity/shopping/models/shopping_model.dart';
 
 class ShoppingRepository {
   final List<ShoppingModel> _items = [];
+  List<ShoppingModel> _filteredItems = [];
 
   Future<List<ShoppingModel>> fetchItems() async {
+    _filteredItems.clear();
     await Future.delayed(Duration(milliseconds: 500));
     return List.from(_items);
   }
@@ -52,6 +54,36 @@ class ShoppingRepository {
     }
   }
 
+  Future<List<ShoppingModel>> _sortItems(
+    int Function(ShoppingModel a, ShoppingModel b) comparator,
+  ) async {
+    _items.sort(comparator);
+    _filteredItems.sort(comparator);
+
+    if (_filteredItems.isEmpty) {
+      await Future.delayed(const Duration(milliseconds: 500));
+      return List.from(_items);
+    }
+
+    return List.from(_filteredItems);
+  }
+
+  Future<List<ShoppingModel>> sortByName() async {
+    return _sortItems(
+      (a, b) => a.name.toLowerCase().compareTo(b.name.toLowerCase()),
+    );
+  }
+
+  Future<List<ShoppingModel>> sortByDate() async {
+    return _sortItems((a, b) => a.id.compareTo(b.id));
+  }
+
+  Future<List<ShoppingModel>> filterBy(String category) async {
+    _filteredItems = _items.where((item) => item.tag == category).toList();
+    await Future.delayed(const Duration(milliseconds: 500));
+    return List.from(_filteredItems);
+  }
+
   Future<void> printShoppingList(
     List<ShoppingModel> items,
     String choose,
@@ -87,17 +119,5 @@ class ShoppingRepository {
     } catch (e) {
       print('Error saving list: $e');
     }
-  }
-
-  Future<List<ShoppingModel>> sortByName() async {
-    _items.sort((a, b) => a.name.toLowerCase().compareTo(b.name.toLowerCase()));
-    await Future.delayed(Duration(milliseconds: 500));
-    return List.from(_items);
-  }
-
-  Future<List<ShoppingModel>> sortByDate() async {
-    _items.sort((a, b) => a.id.compareTo(b.id));
-    await Future.delayed(Duration(milliseconds: 500));
-    return List.from(_items);
   }
 }

@@ -1,4 +1,6 @@
-import 'package:dartactivity/shopping/repositories/action_repository.dart';
+import 'package:dartactivity/shopping/utils/filter_menu.dart';
+import 'package:dartactivity/shopping/utils/print_menu.dart';
+import 'package:dartactivity/shopping/utils/sort_menu.dart';
 import 'package:dartactivity/shopping/widgets/icon_text_button.dart';
 import 'package:flutter/material.dart';
 
@@ -11,6 +13,15 @@ class SortFilterContainer extends StatefulWidget {
 
 class _SortFilterContainerState extends State<SortFilterContainer> {
   String sortLabel = "Sort";
+  String filterLabel = "Filter";
+  bool isFiltered = false;
+
+  @override
+  void initState() {
+    filterLabel == "Filter" ? isFiltered = true : isFiltered = false;
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -23,7 +34,7 @@ class _SortFilterContainerState extends State<SortFilterContainer> {
             children: [
               IconTextButton(
                 onTap: () {
-                  ActionRepository().showPrintMenu(context);
+                  PrintMenu().showPrintMenu(context);
                 },
                 label: "Print",
                 icon: Icons.print,
@@ -36,18 +47,19 @@ class _SortFilterContainerState extends State<SortFilterContainer> {
             children: [
               IconTextButton(
                 onTap: () {
-                  ActionRepository().showSortMenu(context, (selectedValue) {
-                    if (selectedValue == 'name') {
+                  SortMenu.showSortMenu(
+                    context: context,
+                    onSelected: (selectedValue) {
                       setState(() {
-                        sortLabel = "Name";
+                        sortLabel =
+                            selectedValue == 'name'
+                                ? "Name"
+                                : selectedValue == "date"
+                                ? "Date"
+                                : "Sort";
                       });
-                    } else if (selectedValue == 'date') {
-                      setState(() {
-                        sortLabel = "Date";
-                      });
-                      print("Sorting by date");
-                    }
-                  });
+                    },
+                  );
                 },
                 label: sortLabel,
                 icon: Icons.swap_vert,
@@ -56,10 +68,21 @@ class _SortFilterContainerState extends State<SortFilterContainer> {
               ),
               IconTextButton(
                 onTap: () {
-                  ActionRepository().showFilterMenu(context);
+                  FilterMenu.showFilterMenu(
+                    context: context,
+                    onSelected: (selectedValue) {
+                      setState(() {
+                        filterLabel = selectedValue;
+                        filterLabel == "Filter"
+                            ? isFiltered = true
+                            : isFiltered = false;
+                      });
+                    },
+                  );
+                  debugPrint("Filter menu clicked");
                 },
-                label: "Filter",
-                icon: Icons.filter_alt,
+                label: filterLabel,
+                icon: isFiltered ? Icons.filter_alt_outlined : Icons.filter_alt,
                 size: 18,
                 iconColor: Colors.black,
               ),

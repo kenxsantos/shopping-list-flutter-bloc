@@ -54,5 +54,10 @@ class ShoppingBloc extends Bloc<ShoppingEvent, ShoppingState> {
       final items = await shopping.sortByDate();
       emit(ShoppingListLoaded(items));
     });
+
+    on<ShoppingFilterBy>((event, emit) async {
+      final items = await shopping.filterBy(event.category);
+      emit(ShoppingListLoaded(items));
+    });
   }
 }

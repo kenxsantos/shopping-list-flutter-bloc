@@ -33,3 +33,8 @@ class ShoppingFetchItem extends ShoppingEvent {}
 class ShoppingSortByName extends ShoppingEvent {}
 
 class ShoppingSortByDate extends ShoppingEvent {}
+
+class ShoppingFilterBy extends ShoppingEvent {
+  final String category;
+  ShoppingFilterBy(this.category);
+}

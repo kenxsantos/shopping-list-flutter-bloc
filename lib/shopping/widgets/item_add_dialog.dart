@@ -69,9 +69,6 @@ class _ItemDialogState extends State<ItemDialog> {
               setState(() {
                 selectedCategory = category;
               });
-
-              print("selected category: $selectedCategory");
-              print("catefory: $category");
             },
           ),
         ],

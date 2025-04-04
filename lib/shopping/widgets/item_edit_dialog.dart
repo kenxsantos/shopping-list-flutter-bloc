@@ -47,6 +47,7 @@ class _EditDialogState extends State<EditDialog> {
     return AlertDialog(
       title: Text('Edit Item'),
       content: Column(
+        mainAxisSize: MainAxisSize.min,
         children: [
           TextField(
             controller: _editController,
@@ -107,6 +108,7 @@ class _EditDialogState extends State<EditDialog> {
                 ShoppingHelper().formatCategory(selectedCategory!),
                 widget.currentIsFavorite,
               );
+              showSnackBarMessage(context, "Updated successfully!");
               Navigator.of(context).pop();
             } else {
               ScaffoldMessenger.of(

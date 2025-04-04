@@ -35,7 +35,7 @@ class _ShoppingHomeState extends State<ShoppingHome> {
       bottomNavigationBar: BottomAppBar(
         height: 80,
         shape: CircularNotchedRectangle(),
-        notchMargin: 8,
+        notchMargin: 6,
         color: Colors.grey[800],
         child: Padding(
           padding: const EdgeInsets.all(8),
