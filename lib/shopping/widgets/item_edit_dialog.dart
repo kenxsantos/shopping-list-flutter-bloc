@@ -101,6 +101,13 @@ class _EditDialogState extends State<EditDialog> {
           child: Text('Cancel'),
         ),
         ElevatedButton(
+          style: ElevatedButton.styleFrom(
+            backgroundColor: Colors.blue,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(Radius.circular(10)),
+            ),
+          ),
+          child: Text('Save', style: TextStyle(color: Colors.white)),
           onPressed: () {
             if (_editController.text.isNotEmpty && selectedCategory != null) {
               widget.onSave(
@@ -116,7 +123,6 @@ class _EditDialogState extends State<EditDialog> {
               ).showSnackBar(SnackBar(content: Text('Value cannot be empty!')));
             }
           },
-          child: Text('Save'),
         ),
       ],
     );

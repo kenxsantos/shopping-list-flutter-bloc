@@ -1,3 +1,4 @@
+import 'package:dartactivity/shopping/widgets/snackbar.dart';
 import 'package:flutter/material.dart';
 
 class DeleteConfirmationDialog extends StatelessWidget {
@@ -21,11 +22,18 @@ class DeleteConfirmationDialog extends StatelessWidget {
           child: Text('Cancel'),
         ),
         ElevatedButton(
+          style: ElevatedButton.styleFrom(
+            backgroundColor: Colors.red,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(Radius.circular(10)),
+            ),
+          ),
+          child: Text('Delete', style: TextStyle(color: Colors.white)),
           onPressed: () {
             onDelete();
+            showSnackBarMessage(context, "Deleted successfully!");
             Navigator.of(context).pop();
           },
-          child: Text('Delete'),
         ),
       ],
     );

@@ -79,6 +79,13 @@ class _ItemDialogState extends State<ItemDialog> {
           child: Text('Cancel'),
         ),
         ElevatedButton(
+          style: ElevatedButton.styleFrom(
+            backgroundColor: Colors.blue,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(Radius.circular(10)),
+            ),
+          ),
+          child: Text('Submit', style: TextStyle(color: Colors.white)),
           onPressed: () {
             if (_itemController.text.isNotEmpty && selectedCategory != null) {
               widget.onSubmit(
@@ -92,7 +99,6 @@ class _ItemDialogState extends State<ItemDialog> {
               showSnackBarMessage(context, "Fields cannot be empty!");
             }
           },
-          child: Text('Submit'),
         ),
       ],
     );
