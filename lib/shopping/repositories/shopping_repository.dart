@@ -12,6 +12,11 @@ class ShoppingRepository {
     return List.from(_items);
   }
 
+  Future<List<ShoppingModel>> fetchFilteredItems() async {
+    await Future.delayed(Duration(milliseconds: 500));
+    return List.from(_filteredItems);
+  }
+
   Future<void> addItem(ShoppingModel item) async {
     _items.add(item);
   }
@@ -37,23 +42,6 @@ class ShoppingRepository {
     _items.removeWhere((item) => item.id == id);
   }
 
-  Future<void> favoriteItem(
-    String id,
-    String newName,
-    String newTag,
-    bool isFavorite,
-  ) async {
-    final index = _items.indexWhere((item) => item.id == id);
-    if (index != -1) {
-      _items[index] = ShoppingModel(
-        id: id,
-        name: newName,
-        tag: newTag,
-        isFavorite: isFavorite,
-      );
-    }
-  }
-
   Future<List<ShoppingModel>> _sortItems(
     int Function(ShoppingModel a, ShoppingModel b) comparator,
   ) async {
@@ -64,7 +52,6 @@ class ShoppingRepository {
       await Future.delayed(const Duration(milliseconds: 500));
       return List.from(_items);
     }
-
     return List.from(_filteredItems);
   }
 

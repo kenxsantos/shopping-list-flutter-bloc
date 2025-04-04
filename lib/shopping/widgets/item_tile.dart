@@ -45,7 +45,7 @@ class _ItemTileState extends State<ItemTile> {
                 widget.isFavorite = !widget.isFavorite;
               });
               context.read<ShoppingBloc>().add(
-                ShoppingFavoriteItem(
+                ShoppingUpdateItem(
                   widget.id,
                   widget.name,
                   widget.tag.toString(),

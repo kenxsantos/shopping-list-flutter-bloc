@@ -20,14 +20,6 @@ class ShoppingDeleteItem extends ShoppingEvent {
   ShoppingDeleteItem(this.id);
 }
 
-class ShoppingFavoriteItem extends ShoppingEvent {
-  final String id;
-  final String name;
-  final String tag;
-  final bool isFavorite;
-  ShoppingFavoriteItem(this.id, this.name, this.tag, this.isFavorite);
-}
-
 class ShoppingFetchItem extends ShoppingEvent {}
 
 class ShoppingSortByName extends ShoppingEvent {}
