@@ -89,7 +89,6 @@ class _EditDialogState extends State<EditDialog> {
               setState(() {
                 selectedCategory = category;
               });
-              print("New Selected Category: $selectedCategory");
             },
           ),
         ],

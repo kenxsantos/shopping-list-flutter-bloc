@@ -31,7 +31,7 @@ class _ItemTileState extends State<ItemTile> {
   Widget build(BuildContext context) {
     return ListTile(
       contentPadding: EdgeInsets.all(16),
-      title: Text(widget.name),
+      title: Text(widget.name, style: TextStyle(color: Colors.white)),
       subtitle: Text(
         widget.tag.toString(),
         style: TextStyle(fontSize: 12, color: Colors.green),
@@ -62,11 +62,12 @@ class _ItemTileState extends State<ItemTile> {
             },
             icon:
                 widget.isFavorite
-                    ? Icon(Icons.favorite)
-                    : Icon(Icons.favorite_border_outlined),
+                    ? Icon(Icons.favorite, color: Colors.white)
+                    : Icon(Icons.favorite_border_outlined, color: Colors.white),
           ),
 
           PopupMenuButton<String>(
+            iconColor: Colors.white,
             itemBuilder:
                 (BuildContext context) => <PopupMenuEntry<String>>[
                   PopupMenuItem(
@@ -99,22 +100,6 @@ class _ItemTileState extends State<ItemTile> {
       ),
     );
   }
-
-  // (context) => ItemDialog(
-  //   onSubmit: (
-  //     String addedItem,
-  //     String addedTag,
-  //     bool addedFavorite,
-  //   ) {
-  //     final newItem = ShoppingModel(
-  //       id: DateTime.now().toString(),
-  //       name: addedItem,
-  //       tag: addedTag,
-  //       isFavorite: addedFavorite,
-  //     );
-  //     context.read<ShoppingBloc>().add(ShoppingAddItem(newItem));
-  //   },
-  // ),
 
   void _showEditDialog(BuildContext context) {
     showDialog(

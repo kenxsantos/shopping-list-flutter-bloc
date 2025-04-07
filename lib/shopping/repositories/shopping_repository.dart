@@ -92,7 +92,6 @@ class ShoppingRepository {
   Future<List<ShoppingModel>> filterBy(String category) async {
     _filteredItems = _items.where((item) => item.tag == category).toList();
     await Future.delayed(const Duration(milliseconds: 500));
-    print("Filtered Items: $_filteredItems");
     return List.from(_filteredItems);
   }
 

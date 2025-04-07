@@ -42,9 +42,7 @@ class _ShoppingListState extends State<ShoppingList> {
     } else if (state is ShoppingErrorState) {
       return Center(child: Text('Error: ${state.message}'));
     } else {
-      return const Center(
-        child: Text('Welcome! Add items to your shopping list.'),
-      );
+      return const Center(child: CircularProgressIndicator());
     }
   }
 
@@ -57,6 +55,7 @@ class _ShoppingListState extends State<ShoppingList> {
       itemBuilder: (context, index) {
         final item = items[index];
         return Card(
+          color: Colors.grey[800],
           child: ItemTile(
             id: item.id,
             name: item.name,
