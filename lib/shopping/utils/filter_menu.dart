@@ -15,7 +15,7 @@ class FilterMenu {
       position: RelativeRect.fromLTRB(100, 130, 0, 0),
       items: [
         PopupMenuItem(
-          value: "Filter",
+          value: "All Category",
           child: Text('All Category'),
           onTap: () {
             context.read<ShoppingBloc>().add(ShoppingFetchItem());

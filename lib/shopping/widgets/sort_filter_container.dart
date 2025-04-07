@@ -13,12 +13,12 @@ class SortFilterContainer extends StatefulWidget {
 
 class _SortFilterContainerState extends State<SortFilterContainer> {
   String sortLabel = "Sort";
-  String filterLabel = "Filter";
+  String filterLabel = "All Category";
   bool isFiltered = false;
 
   @override
   void initState() {
-    filterLabel == "Filter" ? isFiltered = true : isFiltered = false;
+    filterLabel == "All Category" ? isFiltered = true : isFiltered = false;
     super.initState();
   }
 
@@ -73,13 +73,12 @@ class _SortFilterContainerState extends State<SortFilterContainer> {
                     onSelected: (selectedValue) {
                       setState(() {
                         filterLabel = selectedValue;
-                        filterLabel == "Filter"
+                        filterLabel == "All Category"
                             ? isFiltered = true
                             : isFiltered = false;
                       });
                     },
                   );
-                  debugPrint("Filter menu clicked");
                 },
                 label: filterLabel,
                 icon: isFiltered ? Icons.filter_alt_outlined : Icons.filter_alt,

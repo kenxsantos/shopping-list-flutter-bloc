@@ -1,5 +1,6 @@
 import 'package:dartactivity/shopping/bloc/shopping_bloc.dart';
 import 'package:dartactivity/shopping/bloc/shopping_event.dart';
+import 'package:dartactivity/shopping/models/shopping_model.dart';
 import 'package:dartactivity/shopping/widgets/item_delete_dialog.dart';
 import 'package:dartactivity/shopping/widgets/item_edit_dialog.dart';
 import 'package:dartactivity/shopping/widgets/snackbar.dart';
@@ -44,14 +45,14 @@ class _ItemTileState extends State<ItemTile> {
               setState(() {
                 widget.isFavorite = !widget.isFavorite;
               });
-              context.read<ShoppingBloc>().add(
-                ShoppingUpdateItem(
-                  widget.id,
-                  widget.name,
-                  widget.tag.toString(),
-                  widget.isFavorite,
-                ),
+
+              final updatedItem = ShoppingModel(
+                id: widget.id,
+                name: widget.name,
+                tag: widget.tag,
+                isFavorite: widget.isFavorite,
               );
+              context.read<ShoppingBloc>().add(ShoppingUpdateItem(updatedItem));
               showSnackBarMessage(
                 context,
                 widget.isFavorite
@@ -99,6 +100,22 @@ class _ItemTileState extends State<ItemTile> {
     );
   }
 
+  // (context) => ItemDialog(
+  //   onSubmit: (
+  //     String addedItem,
+  //     String addedTag,
+  //     bool addedFavorite,
+  //   ) {
+  //     final newItem = ShoppingModel(
+  //       id: DateTime.now().toString(),
+  //       name: addedItem,
+  //       tag: addedTag,
+  //       isFavorite: addedFavorite,
+  //     );
+  //     context.read<ShoppingBloc>().add(ShoppingAddItem(newItem));
+  //   },
+  // ),
+
   void _showEditDialog(BuildContext context) {
     showDialog(
       context: context,
@@ -109,9 +126,13 @@ class _ItemTileState extends State<ItemTile> {
             currentTag: widget.tag,
             currentIsFavorite: widget.isFavorite,
             onSave: (newName, newTag, newIsFavorite) {
-              context.read<ShoppingBloc>().add(
-                ShoppingUpdateItem(widget.id, newName, newTag, newIsFavorite),
+              final updatedItem = ShoppingModel(
+                id: widget.id,
+                name: newName,
+                tag: newTag,
+                isFavorite: newIsFavorite,
               );
+              context.read<ShoppingBloc>().add(ShoppingUpdateItem(updatedItem));
             },
           ),
     );
