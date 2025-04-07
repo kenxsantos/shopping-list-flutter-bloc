@@ -1,5 +1,6 @@
 import 'package:dartactivity/shopping/bloc/shopping_bloc.dart';
 import 'package:dartactivity/shopping/bloc/shopping_state.dart';
+import 'package:dartactivity/shopping/models/shopping_model.dart';
 import 'package:dartactivity/shopping/utils/enum_tags.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -84,5 +85,30 @@ class ShoppingHelper {
         );
       },
     );
+  }
+
+  String generateTextContent(List<ShoppingModel> items) {
+    final header = 'Shopping List:\n';
+    final content = items
+        .asMap()
+        .entries
+        .map((entry) {
+          final index = entry.key + 1;
+          final item = entry.value;
+          return '$index. ID: ${item.id}, Name: ${item.name}, Favorite: ${item.isFavorite ? "Yes" : "No"}';
+        })
+        .join('\n');
+    return header + content;
+  }
+
+  String generateCsvContent(List<ShoppingModel> items) {
+    final header = 'ID,Name,Tag,Favorite\n';
+    final content = items
+        .map(
+          (item) =>
+              '${item.id},${item.name},${item.tag},${item.isFavorite ? "Yes" : "No"}',
+        )
+        .join('\n');
+    return header + content;
   }
 }

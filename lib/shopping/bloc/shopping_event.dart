@@ -27,3 +27,11 @@ class ShoppingFilterBy extends ShoppingEvent {
   final String category;
   ShoppingFilterBy(this.category);
 }
+
+class ShoppingPrintFormat extends ShoppingEvent {
+  final String format;
+  final List<ShoppingModel> items;
+  final String type;
+
+  ShoppingPrintFormat(this.format, this.items, this.type);
+}

@@ -21,3 +21,8 @@ class ShoppingListFiltered extends ShoppingState {
   final List<ShoppingModel> filteredItems;
   ShoppingListFiltered(this.filteredItems);
 }
+
+class ShoppingPrintList extends ShoppingState {
+  final List<ShoppingModel> items;
+  ShoppingPrintList(this.items);
+}
