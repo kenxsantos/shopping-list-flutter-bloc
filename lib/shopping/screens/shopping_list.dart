@@ -21,28 +21,35 @@ class _ShoppingListState extends State<ShoppingList> {
       height: double.infinity,
       child: BlocBuilder<ShoppingBloc, ShoppingState>(
         builder: (context, state) {
-          if (state is ShoppingListLoaded) {
+          if (state is ShoppingLoadingState) {
+            return Center(child: CircularProgressIndicator());
+          } else if (state is ShoppingListLoaded) {
             final items = state.items;
+
             if (items.isEmpty) {
-              return Center(child: Text('No items in the list.'));
-            } else {
-              return ListView.builder(
-                itemCount: items.length,
-                itemBuilder: (context, index) {
-                  final item = items[index];
-                  return Card(
-                    child: ItemTile(
-                      id: item.id,
-                      name: item.name,
-                      tag: item.tag,
-                      isFavorite: item.isFavorite,
-                    ),
-                  );
-                },
-              );
+              return Center(child: Text('No items found.'));
             }
+            return ListView.builder(
+              itemCount: items.length,
+              itemBuilder: (context, index) {
+                final item = items[index];
+                return Card(
+                  child: ItemTile(
+                    id: item.id,
+                    name: item.name,
+                    tag: item.tag,
+                    isFavorite: item.isFavorite,
+                  ),
+                );
+              },
+            );
+          } else if (state is ShoppingErrorState) {
+            return Center(child: Text('Error: ${state.message}'));
+          } else {
+            return Center(
+              child: Text('Welcome! Add items to your shopping list.'),
+            );
           }
-          return Center(child: Text('No items in the list.'));
         },
       ),
     );
