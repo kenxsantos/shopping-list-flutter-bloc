@@ -1,40 +1,64 @@
+import 'dart:convert';
 import 'dart:io';
 import 'package:path_provider/path_provider.dart';
 import 'package:dartactivity/shopping/models/shopping_model.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class ShoppingRepository {
-  final List<ShoppingModel> _items = [];
+  List<ShoppingModel> _items = [];
   List<ShoppingModel> _filteredItems = [];
+
+  Future<void> _saveItemsToStorage() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String encodedItems = jsonEncode(
+      _items.map((item) => item.toJson()).toList(),
+    );
+    await prefs.setString('shopping_list', encodedItems);
+  }
 
   Future<List<ShoppingModel>> fetchItems() async {
     _filteredItems.clear();
-    await Future.delayed(Duration(milliseconds: 500));
-    return List.from(_items);
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? encodedItems = prefs.getString('shopping_list');
+    if (encodedItems != null && encodedItems.isNotEmpty) {
+      _items =
+          (jsonDecode(encodedItems) as List)
+              .map((json) => ShoppingModel.fromJson(json))
+              .toList();
+    } else {
+      _items = [];
+    }
+    await Future.delayed(const Duration(milliseconds: 500));
+    return List.unmodifiable(_items);
   }
 
-  Future<List<ShoppingModel>> fetchFilteredItems() async {
-    await Future.delayed(Duration(milliseconds: 500));
-    return List.from(_filteredItems);
+  Future<List<ShoppingModel>> fetchFilteredItems(
+    ShoppingModel updatedItem,
+  ) async {
+    final index = _filteredItems.indexWhere(
+      (item) => item.id == updatedItem.id,
+    );
+    if (index != -1) {
+      _filteredItems[index] = updatedItem;
+      await Future.delayed(const Duration(milliseconds: 500));
+      await _saveItemsToStorage();
+    }
+
+    return List.unmodifiable(_filteredItems);
   }
 
   Future<void> addItem(ShoppingModel item) async {
     _items.add(item);
+    await Future.delayed(const Duration(milliseconds: 500));
+    await _saveItemsToStorage();
   }
 
-  Future<void> updateItem(
-    String id,
-    String newName,
-    String newTag,
-    bool isFavorite,
-  ) async {
-    final index = _items.indexWhere((item) => item.id == id);
+  Future<void> updateItem(ShoppingModel updatedItem) async {
+    final index = _items.indexWhere((item) => item.id == updatedItem.id);
     if (index != -1) {
-      _items[index] = ShoppingModel(
-        id: id,
-        name: newName,
-        tag: newTag,
-        isFavorite: isFavorite,
-      );
+      _items[index] = updatedItem;
+      await Future.delayed(const Duration(milliseconds: 500));
+      await _saveItemsToStorage();
     }
   }
 
@@ -68,6 +92,7 @@ class ShoppingRepository {
   Future<List<ShoppingModel>> filterBy(String category) async {
     _filteredItems = _items.where((item) => item.tag == category).toList();
     await Future.delayed(const Duration(milliseconds: 500));
+    print("Filtered Items: $_filteredItems");
     return List.from(_filteredItems);
   }
 

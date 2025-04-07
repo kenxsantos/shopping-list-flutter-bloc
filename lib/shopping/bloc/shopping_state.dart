@@ -16,3 +16,8 @@ class ShoppingListLoaded extends ShoppingState {
   final List<ShoppingModel> items;
   ShoppingListLoaded(this.items);
 }
+
+class ShoppingListFiltered extends ShoppingState {
+  final List<ShoppingModel> filteredItems;
+  ShoppingListFiltered(this.filteredItems);
+}

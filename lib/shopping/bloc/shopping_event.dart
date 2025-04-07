@@ -8,11 +8,8 @@ class ShoppingAddItem extends ShoppingEvent {
 }
 
 class ShoppingUpdateItem extends ShoppingEvent {
-  final String id;
-  final String newName;
-  final String newTag;
-  final bool isFavorite;
-  ShoppingUpdateItem(this.id, this.newName, this.newTag, this.isFavorite);
+  final ShoppingModel item;
+  ShoppingUpdateItem(this.item);
 }
 
 class ShoppingDeleteItem extends ShoppingEvent {

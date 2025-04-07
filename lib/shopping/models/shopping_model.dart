@@ -10,4 +10,17 @@ class ShoppingModel {
     required this.tag,
     required this.isFavorite,
   });
+
+  Map<String, dynamic> toJson() {
+    return {'id': id, 'name': name, 'tag': tag, 'isFavorite': isFavorite};
+  }
+
+  factory ShoppingModel.fromJson(Map<String, dynamic> json) {
+    return ShoppingModel(
+      id: json['id'],
+      name: json['name'],
+      tag: json['tag'],
+      isFavorite: json['isFavorite'],
+    );
+  }
 }

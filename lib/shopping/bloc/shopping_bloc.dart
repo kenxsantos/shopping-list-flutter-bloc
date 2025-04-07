@@ -9,18 +9,19 @@ class ShoppingBloc extends Bloc<ShoppingEvent, ShoppingState> {
     on<ShoppingAddItem>((event, emit) async {
       await shopping.addItem(event.item);
       final items = await shopping.fetchItems();
+
       emit(ShoppingListLoaded(items));
     });
 
     on<ShoppingUpdateItem>((event, emit) async {
-      await shopping.updateItem(
-        event.id,
-        event.newName,
-        event.newTag,
-        event.isFavorite,
-      );
-      final items = await shopping.fetchItems();
-      emit(ShoppingListLoaded(items));
+      await shopping.updateItem(event.item);
+      if (state is ShoppingListFiltered) {
+        final filteredItems = await shopping.fetchFilteredItems(event.item);
+        emit(ShoppingListFiltered(filteredItems));
+      } else {
+        final items = await shopping.fetchItems();
+        emit(ShoppingListLoaded(items));
+      }
     });
 
     on<ShoppingDeleteItem>((event, emit) async {
@@ -46,7 +47,7 @@ class ShoppingBloc extends Bloc<ShoppingEvent, ShoppingState> {
 
     on<ShoppingFilterBy>((event, emit) async {
       final items = await shopping.filterBy(event.category);
-      emit(ShoppingListLoaded(items));
+      emit(ShoppingListFiltered(items));
     });
   }
 }

@@ -45,6 +45,31 @@ class _FavoritePageState extends State<FavoritePage> {
                 },
               );
             }
+          } else if (state is ShoppingListFiltered) {
+            final items =
+                state.filteredItems.where((item) => item.isFavorite).toList();
+            if (items.isEmpty) {
+              return Center(child: Text('No items in the favorites.'));
+            } else {
+              return ListView.builder(
+                itemCount: items.length,
+                itemBuilder: (context, index) {
+                  final item = items[index];
+                  print(item.name);
+                  if (item.isFavorite) {
+                    return Card(
+                      child: ItemTile(
+                        id: item.id,
+                        name: item.name,
+                        tag: item.tag,
+                        isFavorite: item.isFavorite,
+                      ),
+                    );
+                  }
+                  return SizedBox.shrink();
+                },
+              );
+            }
           }
           return Center(child: Text('No items in the favorites.'));
         },

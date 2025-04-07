@@ -60,13 +60,22 @@ class ShoppingHelper {
     return BlocBuilder<ShoppingBloc, ShoppingState>(
       builder: (context, state) {
         int countItem = 0;
+
         if (state is ShoppingListLoaded) {
           if (showFavoritesOnly) {
             countItem = state.items.where((item) => item.isFavorite).length;
           } else {
             countItem = state.items.length;
           }
+        } else if (state is ShoppingListFiltered) {
+          if (showFavoritesOnly) {
+            countItem =
+                state.filteredItems.where((item) => item.isFavorite).length;
+          } else {
+            countItem = state.filteredItems.length;
+          }
         }
+
         return IconButton(
           enableFeedback: false,
           icon: Badge.count(count: countItem, child: icon),
