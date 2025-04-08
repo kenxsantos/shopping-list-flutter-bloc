@@ -30,7 +30,7 @@ class FilterMenu {
             },
             child: Text(items),
           );
-        }).toList(),
+        }),
       ],
     );
     if (selectedValue != null) {

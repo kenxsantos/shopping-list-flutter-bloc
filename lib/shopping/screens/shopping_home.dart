@@ -26,6 +26,7 @@ class _ShoppingHomeState extends State<ShoppingHome> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        automaticallyImplyLeading: false,
         title: Text(pageIndex == 0 ? "Shopping List" : "Favorite List"),
         backgroundColor: Colors.white,
         foregroundColor: Colors.black,
