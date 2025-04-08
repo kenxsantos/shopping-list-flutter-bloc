@@ -111,8 +111,8 @@ class ShoppingRepository {
     final db = await dbHelper.database;
     final data = await db.query(
       'shopping',
-      where: 'name = ?',
-      whereArgs: [item],
+      where: 'name COLLATE NOCASE = ? OR tag COLLATE NOCASE = ?',
+      whereArgs: [item, item],
     );
     return List.generate(data.length, (i) => ShoppingModel.fromJson(data[i]));
   }
