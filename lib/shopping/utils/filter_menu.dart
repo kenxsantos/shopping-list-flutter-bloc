@@ -26,7 +26,7 @@ class FilterMenu {
           return PopupMenuItem<String>(
             value: items,
             onTap: () {
-              context.read<ShoppingBloc>().add(ShoppingFilterBy(items));
+              context.read<ShoppingBloc>().add(ShoppingFilterByCategory(items));
             },
             child: Text(items),
           );

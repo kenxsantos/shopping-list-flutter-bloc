@@ -1,39 +1,48 @@
-import 'dart:convert';
 import 'dart:io';
 import 'package:dartactivity/shopping/bloc/shopping_state.dart';
+import 'package:dartactivity/shopping/utils/shopping_database.dart';
 import 'package:dartactivity/shopping/utils/shopping_helper.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:dartactivity/shopping/models/shopping_model.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:sqflite/sqflite.dart';
 
 class ShoppingRepository {
-  List<ShoppingModel> _items = [];
   List<ShoppingModel> _filteredItems = [];
+  final ShoppingDatabase dbHelper = ShoppingDatabase.instance;
 
-  Future<void> _saveItemsToStorage() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    String encodedItems = jsonEncode(
-      _items.map((item) => item.toJson()).toList(),
+  Future<void> addItem(ShoppingModel item) async {
+    final db = await dbHelper.database;
+    await db.insert(
+      'shopping',
+      item.toMap(),
+      conflictAlgorithm: ConflictAlgorithm.replace,
     );
-    await prefs.setString('shopping_list', encodedItems);
-    print("Updated SharedPreferences: $encodedItems");
+    _filteredItems.add(item);
   }
 
-  Future<List<ShoppingModel>> fetchItems() async {
+  Future<List<ShoppingModel>> getItems() async {
     _filteredItems.clear();
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    String? encodedItems = prefs.getString('shopping_list');
-    if (encodedItems != null && encodedItems.isNotEmpty) {
-      _items =
-          (jsonDecode(encodedItems) as List)
-              .map((json) => ShoppingModel.fromJson(json))
-              .toList();
-    } else {
-      _items = [];
-    }
+    final db = await dbHelper.database;
+    final List<Map<String, dynamic>> maps = await db.query('shopping');
+    return List.generate(maps.length, (i) => ShoppingModel.fromJson(maps[i]));
+  }
+
+  Future<void> updateItem(ShoppingModel item) async {
+    final db = await dbHelper.database;
+    await db.update(
+      'shopping',
+      item.toMap(),
+      where: 'id = ?',
+      whereArgs: [item.id],
+    );
+  }
+
+  Future<void> deleteItem(int id) async {
+    final db = await dbHelper.database;
+    await db.delete('shopping', where: 'id = ?', whereArgs: [id]);
+    _filteredItems.removeWhere((item) => item.id == id);
     await Future.delayed(const Duration(milliseconds: 500));
-    return List.unmodifiable(_items);
   }
 
   Future<List<ShoppingModel>> fetchFilteredItems(
@@ -45,62 +54,57 @@ class ShoppingRepository {
     if (index != -1) {
       _filteredItems[index] = updatedItem;
       await Future.delayed(const Duration(milliseconds: 500));
-      await _saveItemsToStorage();
     }
-
     return List.unmodifiable(_filteredItems);
   }
 
-  Future<void> addItem(ShoppingModel item) async {
-    _items.add(item);
-    _filteredItems.add(item);
-    await Future.delayed(const Duration(milliseconds: 500));
-    await _saveItemsToStorage();
-  }
+  Future<List<ShoppingModel>> sortByName() async {
+    final db = await dbHelper.database;
+    final List<Map<String, dynamic>> maps = await db.query(
+      'shopping',
+      orderBy: 'LOWER(name) ASC',
+    );
 
-  Future<void> updateItem(ShoppingModel updatedItem) async {
-    final index = _items.indexWhere((item) => item.id == updatedItem.id);
-    if (index != -1) {
-      _items[index] = updatedItem;
-      await Future.delayed(const Duration(milliseconds: 500));
-      await _saveItemsToStorage();
-    }
-  }
-
-  Future<void> deleteItem(ShoppingModel deletedItems) async {
-    _items.removeWhere((item) => item.id == deletedItems.id);
-    _filteredItems.removeWhere((item) => item.id == deletedItems.id);
-    await Future.delayed(const Duration(milliseconds: 500));
-    await _saveItemsToStorage();
-  }
-
-  Future<List<ShoppingModel>> _sortItems(
-    int Function(ShoppingModel a, ShoppingModel b) comparator,
-  ) async {
-    _items.sort(comparator);
-    _filteredItems.sort(comparator);
+    _filteredItems.sort(
+      (a, b) => a.name.toLowerCase().compareTo(b.name.toLowerCase()),
+    );
 
     if (_filteredItems.isEmpty) {
       await Future.delayed(const Duration(milliseconds: 500));
-      return List.from(_items);
+      return List.generate(maps.length, (i) => ShoppingModel.fromJson(maps[i]));
     }
     return List.from(_filteredItems);
   }
 
-  Future<List<ShoppingModel>> sortByName() async {
-    return _sortItems(
-      (a, b) => a.name.toLowerCase().compareTo(b.name.toLowerCase()),
-    );
-  }
-
   Future<List<ShoppingModel>> sortByDate() async {
-    return _sortItems((a, b) => a.id.compareTo(b.id));
+    final db = await dbHelper.database;
+    final List<Map<String, dynamic>> maps = await db.query(
+      'shopping',
+      orderBy: 'id ASC',
+    );
+
+    _filteredItems.sort((a, b) => a.id.compareTo(b.id));
+
+    if (_filteredItems.isEmpty) {
+      await Future.delayed(const Duration(milliseconds: 500));
+      return List.generate(maps.length, (i) => ShoppingModel.fromJson(maps[i]));
+    }
+    return List.from(_filteredItems);
   }
 
   Future<List<ShoppingModel>> filterBy(String category) async {
-    _filteredItems = _items.where((item) => item.tag == category).toList();
-    await Future.delayed(const Duration(milliseconds: 500));
-    return List.from(_filteredItems);
+    final db = await dbHelper.database;
+    final List<Map<String, dynamic>> maps = await db.query(
+      'shopping',
+      where: 'tag = ?',
+      whereArgs: [category],
+    );
+    _filteredItems = List.generate(
+      maps.length,
+      (i) => ShoppingModel.fromJson(maps[i]),
+    );
+    print("Filtered Items: $_filteredItems");
+    return List.unmodifiable(_filteredItems);
   }
 
   Future<void> updateState(
@@ -110,8 +114,10 @@ class ShoppingRepository {
   ) async {
     if (state is ShoppingListFiltered) {
       emit(ShoppingListFiltered(await fetchFilteredItems(item)));
+      print("List Filtered State: $state");
     } else {
-      emit(ShoppingListLoaded(await fetchItems()));
+      emit(ShoppingListLoaded(await getItems()));
+      print("List Loaded State: $state");
     }
   }
 

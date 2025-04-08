@@ -2,6 +2,7 @@ import 'package:dartactivity/shopping/bloc/shopping_bloc.dart';
 import 'package:dartactivity/shopping/bloc/shopping_state.dart';
 import 'package:dartactivity/shopping/models/shopping_model.dart';
 import 'package:dartactivity/shopping/utils/enum_tags.dart';
+import 'package:dartactivity/shopping/utils/shopping_database.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -107,5 +108,18 @@ class ShoppingHelper {
         .map((item) => '${item.id},${item.name},${item.tag}')
         .join('\n');
     return header + content;
+  }
+
+  Future<int> getLastId() async {
+    final ShoppingDatabase dbHelper = ShoppingDatabase.instance;
+    final db = await dbHelper.database;
+    final List<Map<String, dynamic>> result = await db.rawQuery(
+      'SELECT MAX(id) as lastId FROM shopping',
+    );
+
+    if (result.isNotEmpty && result.first['lastId'] != null) {
+      return result.first['lastId'] as int; // Get the last ID
+    }
+    return 0; // Return 0 if no records exist
   }
 }

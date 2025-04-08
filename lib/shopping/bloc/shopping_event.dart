@@ -13,8 +13,8 @@ class ShoppingUpdateItem extends ShoppingEvent {
 }
 
 class ShoppingDeleteItem extends ShoppingEvent {
-  final ShoppingModel item;
-  ShoppingDeleteItem(this.item);
+  final String id;
+  ShoppingDeleteItem(this.id);
 }
 
 class ShoppingFetchItem extends ShoppingEvent {}
@@ -23,9 +23,9 @@ class ShoppingSortByName extends ShoppingEvent {}
 
 class ShoppingSortByDate extends ShoppingEvent {}
 
-class ShoppingFilterBy extends ShoppingEvent {
+class ShoppingFilterByCategory extends ShoppingEvent {
   final String category;
-  ShoppingFilterBy(this.category);
+  ShoppingFilterByCategory(this.category);
 }
 
 class ShoppingPrintFormat extends ShoppingEvent {

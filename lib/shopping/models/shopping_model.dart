@@ -1,5 +1,5 @@
 class ShoppingModel {
-  final String id;
+  final int id;
   final String name;
   final String tag;
   final bool isFavorite;
@@ -11,8 +11,13 @@ class ShoppingModel {
     required this.isFavorite,
   });
 
-  Map<String, dynamic> toJson() {
-    return {'id': id, 'name': name, 'tag': tag, 'isFavorite': isFavorite};
+  Map<String, dynamic> toMap() {
+    return {
+      'id': id,
+      'name': name,
+      'tag': tag,
+      'isFavorite': isFavorite ? 1 : 0,
+    };
   }
 
   factory ShoppingModel.fromJson(Map<String, dynamic> json) {
@@ -20,7 +25,7 @@ class ShoppingModel {
       id: json['id'],
       name: json['name'],
       tag: json['tag'],
-      isFavorite: json['isFavorite'],
+      isFavorite: json['isFavorite'] == 1,
     );
   }
 }

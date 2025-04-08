@@ -7,7 +7,6 @@ import 'package:flutter/material.dart';
 
 // ignore: must_be_immutable
 class EditDialog extends StatefulWidget {
-  final String id;
   String currentName;
   String currentTag;
   bool currentIsFavorite;
@@ -15,7 +14,7 @@ class EditDialog extends StatefulWidget {
 
   EditDialog({
     super.key,
-    required this.id,
+
     required this.currentName,
     required this.currentTag,
     required this.currentIsFavorite,

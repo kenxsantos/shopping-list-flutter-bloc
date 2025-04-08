@@ -4,17 +4,12 @@ import 'package:flutter/material.dart';
 // ignore: must_be_immutable
 class DeleteConfirmationDialog extends StatelessWidget {
   final String id;
-  String currentName;
-  String currentTag;
-  bool currentIsFavorite;
-  final void Function(String name, String tag, bool isFavorite) onDelete;
 
-  DeleteConfirmationDialog({
+  final void Function() onDelete;
+
+  const DeleteConfirmationDialog({
     super.key,
     required this.id,
-    required this.currentName,
-    required this.currentTag,
-    required this.currentIsFavorite,
     required this.onDelete,
   });
 
@@ -37,7 +32,7 @@ class DeleteConfirmationDialog extends StatelessWidget {
           ),
           child: Text('Delete', style: TextStyle(color: Colors.white)),
           onPressed: () {
-            onDelete(currentName, currentTag, currentIsFavorite);
+            onDelete();
             showSnackBarMessage(context, "Deleted successfully!");
             Navigator.of(context).pop();
           },

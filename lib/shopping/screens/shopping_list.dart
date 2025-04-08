@@ -1,6 +1,7 @@
 import 'package:dartactivity/shopping/bloc/shopping_bloc.dart';
 import 'package:dartactivity/shopping/bloc/shopping_event.dart';
 import 'package:dartactivity/shopping/bloc/shopping_state.dart';
+import 'package:dartactivity/shopping/models/shopping_model.dart';
 import 'package:dartactivity/shopping/widgets/item_tile.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -34,19 +35,23 @@ class _ShoppingListState extends State<ShoppingList> {
 
   Widget _buildStateContent(ShoppingState state) {
     if (state is ShoppingLoadingState) {
+      print("shoppin loading state: $state");
       return const Center(child: CircularProgressIndicator());
     } else if (state is ShoppingListLoaded) {
+      print("shoppin list state: $state");
       return _buildItemList(state.items);
     } else if (state is ShoppingListFiltered) {
+      print("shoppin list filtered state: $state");
       return _buildItemList(state.filteredItems);
     } else if (state is ShoppingErrorState) {
+      print("shoppin error state: $state");
       return Center(child: Text('Error: ${state.message}'));
     } else {
       return const Center(child: CircularProgressIndicator());
     }
   }
 
-  Widget _buildItemList(List items) {
+  Widget _buildItemList(List<ShoppingModel> items) {
     if (items.isEmpty) {
       return const Center(child: Text('No items found.'));
     }

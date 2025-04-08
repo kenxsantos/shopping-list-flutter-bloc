@@ -4,6 +4,7 @@ import 'package:dartactivity/shopping/bloc/shopping_state.dart';
 import 'package:dartactivity/shopping/models/shopping_model.dart';
 import 'package:dartactivity/shopping/screens/favorite_page.dart';
 import 'package:dartactivity/shopping/screens/shopping_list.dart';
+import 'package:dartactivity/shopping/utils/shopping_database.dart';
 import 'package:dartactivity/shopping/utils/shopping_helper.dart';
 import 'package:dartactivity/shopping/widgets/item_add_dialog.dart';
 import 'package:dartactivity/shopping/widgets/sort_filter_container.dart';
@@ -85,9 +86,11 @@ class _ShoppingHomeState extends State<ShoppingHome> {
                     String addedItem,
                     String addedTag,
                     bool addedFavorite,
-                  ) {
+                  ) async {
+                    final ShoppingHelper helper = ShoppingHelper();
+                    int lastId = await helper.getLastId();
                     final newItem = ShoppingModel(
-                      id: DateTime.now().toString(),
+                      id: lastId + 1,
                       name: addedItem,
                       tag: addedTag,
                       isFavorite: addedFavorite,

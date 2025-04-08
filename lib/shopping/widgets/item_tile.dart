@@ -19,7 +19,7 @@ class ItemTile extends StatefulWidget {
 
   final String name;
   final String tag;
-  final String id;
+  final int id;
   bool isFavorite;
 
   @override
@@ -45,7 +45,6 @@ class _ItemTileState extends State<ItemTile> {
               setState(() {
                 widget.isFavorite = !widget.isFavorite;
               });
-
               final updatedItem = ShoppingModel(
                 id: widget.id,
                 name: widget.name,
@@ -106,7 +105,6 @@ class _ItemTileState extends State<ItemTile> {
       context: context,
       builder:
           (context) => EditDialog(
-            id: widget.id,
             currentName: widget.name,
             currentTag: widget.tag,
             currentIsFavorite: widget.isFavorite,
@@ -128,18 +126,11 @@ class _ItemTileState extends State<ItemTile> {
       context: context,
       builder:
           (context) => DeleteConfirmationDialog(
-            id: widget.id,
-            currentName: widget.name,
-            currentTag: widget.tag,
-            currentIsFavorite: widget.isFavorite,
-            onDelete: (name, tag, isFavorite) {
-              final deletedItem = ShoppingModel(
-                id: widget.id,
-                name: name,
-                tag: tag,
-                isFavorite: isFavorite,
+            id: widget.id.toString(),
+            onDelete: () {
+              context.read<ShoppingBloc>().add(
+                ShoppingDeleteItem(widget.id.toString()),
               );
-              context.read<ShoppingBloc>().add(ShoppingDeleteItem(deletedItem));
             },
           ),
     );
