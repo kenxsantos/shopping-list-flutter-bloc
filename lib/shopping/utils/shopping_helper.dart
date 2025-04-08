@@ -95,19 +95,16 @@ class ShoppingHelper {
         .map((entry) {
           final index = entry.key + 1;
           final item = entry.value;
-          return '$index. ID: ${item.id}, Name: ${item.name}, Favorite: ${item.isFavorite ? "Yes" : "No"}';
+          return '$index. ID: ${item.id}, Name: ${item.name}, Category: ${item.tag}';
         })
         .join('\n');
     return header + content;
   }
 
   String generateCsvContent(List<ShoppingModel> items) {
-    final header = 'ID,Name,Tag,Favorite\n';
+    final header = 'ID,Name,Tag\n';
     final content = items
-        .map(
-          (item) =>
-              '${item.id},${item.name},${item.tag},${item.isFavorite ? "Yes" : "No"}',
-        )
+        .map((item) => '${item.id},${item.name},${item.tag}')
         .join('\n');
     return header + content;
   }
