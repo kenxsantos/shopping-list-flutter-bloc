@@ -1,6 +1,8 @@
 import 'dart:convert';
 import 'dart:io';
+import 'package:dartactivity/shopping/bloc/shopping_state.dart';
 import 'package:dartactivity/shopping/utils/shopping_helper.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:dartactivity/shopping/models/shopping_model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -15,6 +17,7 @@ class ShoppingRepository {
       _items.map((item) => item.toJson()).toList(),
     );
     await prefs.setString('shopping_list', encodedItems);
+    print("Updated SharedPreferences: $encodedItems");
   }
 
   Future<List<ShoppingModel>> fetchItems() async {
@@ -50,6 +53,7 @@ class ShoppingRepository {
 
   Future<void> addItem(ShoppingModel item) async {
     _items.add(item);
+    _filteredItems.add(item);
     await Future.delayed(const Duration(milliseconds: 500));
     await _saveItemsToStorage();
   }
@@ -63,8 +67,11 @@ class ShoppingRepository {
     }
   }
 
-  Future<void> deleteItem(String id) async {
-    _items.removeWhere((item) => item.id == id);
+  Future<void> deleteItem(ShoppingModel deletedItems) async {
+    _items.removeWhere((item) => item.id == deletedItems.id);
+    _filteredItems.removeWhere((item) => item.id == deletedItems.id);
+    await Future.delayed(const Duration(milliseconds: 500));
+    await _saveItemsToStorage();
   }
 
   Future<List<ShoppingModel>> _sortItems(
@@ -94,6 +101,18 @@ class ShoppingRepository {
     _filteredItems = _items.where((item) => item.tag == category).toList();
     await Future.delayed(const Duration(milliseconds: 500));
     return List.from(_filteredItems);
+  }
+
+  Future<void> updateState(
+    ShoppingModel item,
+    ShoppingState state,
+    Emitter<ShoppingState> emit,
+  ) async {
+    if (state is ShoppingListFiltered) {
+      emit(ShoppingListFiltered(await fetchFilteredItems(item)));
+    } else {
+      emit(ShoppingListLoaded(await fetchItems()));
+    }
   }
 
   Future<void> printShoppingList(

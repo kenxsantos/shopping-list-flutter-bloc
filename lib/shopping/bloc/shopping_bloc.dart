@@ -8,26 +8,17 @@ class ShoppingBloc extends Bloc<ShoppingEvent, ShoppingState> {
   ShoppingBloc(this.shopping) : super(ShoppingListInitial()) {
     on<ShoppingAddItem>((event, emit) async {
       await shopping.addItem(event.item);
-      final items = await shopping.fetchItems();
-
-      emit(ShoppingListLoaded(items));
+      await shopping.updateState(event.item, state, emit);
     });
 
     on<ShoppingUpdateItem>((event, emit) async {
       await shopping.updateItem(event.item);
-      if (state is ShoppingListFiltered) {
-        final filteredItems = await shopping.fetchFilteredItems(event.item);
-        emit(ShoppingListFiltered(filteredItems));
-      } else {
-        final items = await shopping.fetchItems();
-        emit(ShoppingListLoaded(items));
-      }
+      await shopping.updateState(event.item, state, emit);
     });
 
     on<ShoppingDeleteItem>((event, emit) async {
-      await shopping.deleteItem(event.id);
-      final items = await shopping.fetchItems();
-      emit(ShoppingListLoaded(items));
+      await shopping.deleteItem(event.item);
+      await shopping.updateState(event.item, state, emit);
     });
 
     on<ShoppingFetchItem>((event, emit) async {

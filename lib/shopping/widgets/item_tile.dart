@@ -129,8 +129,17 @@ class _ItemTileState extends State<ItemTile> {
       builder:
           (context) => DeleteConfirmationDialog(
             id: widget.id,
-            onDelete: () {
-              context.read<ShoppingBloc>().add(ShoppingDeleteItem(widget.id));
+            currentName: widget.name,
+            currentTag: widget.tag,
+            currentIsFavorite: widget.isFavorite,
+            onDelete: (name, tag, isFavorite) {
+              final deletedItem = ShoppingModel(
+                id: widget.id,
+                name: name,
+                tag: tag,
+                isFavorite: isFavorite,
+              );
+              context.read<ShoppingBloc>().add(ShoppingDeleteItem(deletedItem));
             },
           ),
     );

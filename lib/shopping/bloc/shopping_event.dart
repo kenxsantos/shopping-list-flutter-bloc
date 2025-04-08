@@ -13,8 +13,8 @@ class ShoppingUpdateItem extends ShoppingEvent {
 }
 
 class ShoppingDeleteItem extends ShoppingEvent {
-  final String id;
-  ShoppingDeleteItem(this.id);
+  final ShoppingModel item;
+  ShoppingDeleteItem(this.item);
 }
 
 class ShoppingFetchItem extends ShoppingEvent {}

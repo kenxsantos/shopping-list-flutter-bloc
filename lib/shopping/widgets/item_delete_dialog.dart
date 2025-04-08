@@ -1,13 +1,20 @@
 import 'package:dartactivity/shopping/widgets/snackbar.dart';
 import 'package:flutter/material.dart';
 
+// ignore: must_be_immutable
 class DeleteConfirmationDialog extends StatelessWidget {
   final String id;
-  final void Function() onDelete;
+  String currentName;
+  String currentTag;
+  bool currentIsFavorite;
+  final void Function(String name, String tag, bool isFavorite) onDelete;
 
-  const DeleteConfirmationDialog({
+  DeleteConfirmationDialog({
     super.key,
     required this.id,
+    required this.currentName,
+    required this.currentTag,
+    required this.currentIsFavorite,
     required this.onDelete,
   });
 
@@ -30,7 +37,7 @@ class DeleteConfirmationDialog extends StatelessWidget {
           ),
           child: Text('Delete', style: TextStyle(color: Colors.white)),
           onPressed: () {
-            onDelete();
+            onDelete(currentName, currentTag, currentIsFavorite);
             showSnackBarMessage(context, "Deleted successfully!");
             Navigator.of(context).pop();
           },
