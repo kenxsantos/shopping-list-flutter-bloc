@@ -107,6 +107,16 @@ class ShoppingRepository {
     return List.unmodifiable(_filteredItems);
   }
 
+  Future<List<ShoppingModel>> searchItem(String item) async {
+    final db = await dbHelper.database;
+    final data = await db.query(
+      'shopping',
+      where: 'name = ?',
+      whereArgs: [item],
+    );
+    return List.generate(data.length, (i) => ShoppingModel.fromJson(data[i]));
+  }
+
   Future<void> updateState(
     ShoppingModel item,
     ShoppingState state,

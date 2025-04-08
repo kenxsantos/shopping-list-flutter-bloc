@@ -4,9 +4,9 @@ import 'package:dartactivity/shopping/bloc/shopping_state.dart';
 import 'package:dartactivity/shopping/models/shopping_model.dart';
 import 'package:dartactivity/shopping/screens/favorite_page.dart';
 import 'package:dartactivity/shopping/screens/shopping_list.dart';
-import 'package:dartactivity/shopping/utils/shopping_database.dart';
 import 'package:dartactivity/shopping/utils/shopping_helper.dart';
 import 'package:dartactivity/shopping/widgets/item_add_dialog.dart';
+import 'package:dartactivity/shopping/widgets/search_bar.dart';
 import 'package:dartactivity/shopping/widgets/sort_filter_container.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -103,8 +103,17 @@ class _ShoppingHomeState extends State<ShoppingHome> {
         child: Icon(Icons.add),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-      body: Column(
-        children: [SortFilterContainer(), Expanded(child: screens[pageIndex])],
+      body: Container(
+        color: Colors.white,
+        height: double.infinity,
+        width: double.infinity,
+        child: Column(
+          children: [
+            SearchBarItem(),
+            SortFilterContainer(),
+            Expanded(child: screens[pageIndex]),
+          ],
+        ),
       ),
     );
   }

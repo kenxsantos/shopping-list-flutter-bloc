@@ -58,5 +58,10 @@ class ShoppingBloc extends Bloc<ShoppingEvent, ShoppingState> {
       emit(ShoppingPrintList(event.items));
       emit(ShoppingListLoaded(event.items));
     });
+
+    on<ShoppingSearchItem>((event, emit) async {
+      final list = await shopping.searchItem(event.item);
+      emit(ShoppingSearchItemState(list));
+    });
   }
 }

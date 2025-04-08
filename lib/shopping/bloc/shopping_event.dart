@@ -35,3 +35,8 @@ class ShoppingPrintFormat extends ShoppingEvent {
 
   ShoppingPrintFormat(this.format, this.items, this.type);
 }
+
+class ShoppingSearchItem extends ShoppingEvent {
+  final String item;
+  ShoppingSearchItem(this.item);
+}

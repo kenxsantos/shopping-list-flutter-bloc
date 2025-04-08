@@ -35,17 +35,15 @@ class _ShoppingListState extends State<ShoppingList> {
 
   Widget _buildStateContent(ShoppingState state) {
     if (state is ShoppingLoadingState) {
-      print("shoppin loading state: $state");
       return const Center(child: CircularProgressIndicator());
     } else if (state is ShoppingListLoaded) {
-      print("shoppin list state: $state");
       return _buildItemList(state.items);
     } else if (state is ShoppingListFiltered) {
-      print("shoppin list filtered state: $state");
       return _buildItemList(state.filteredItems);
     } else if (state is ShoppingErrorState) {
-      print("shoppin error state: $state");
       return Center(child: Text('Error: ${state.message}'));
+    } else if (state is ShoppingSearchItemState) {
+      return _buildItemList(state.items);
     } else {
       return const Center(child: CircularProgressIndicator());
     }
