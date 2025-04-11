@@ -1,0 +1,55 @@
+import 'package:dartactivity/repository/models/shopping_model.dart';
+import 'package:dartactivity/utils/shopping_database.dart';
+import 'package:sqflite/sqflite.dart';
+
+class ShoppingListRepository {
+  final ShoppingDatabase dbHelper = ShoppingDatabase.instance;
+
+  Future<List<ShoppingModel>> getItems() async {
+    final db = await dbHelper.database;
+    final List<Map<String, dynamic>> maps = await db.query('shopping');
+    return maps.map((json) => ShoppingModel.fromJson(json)).toList();
+  }
+
+  Future<List<String>> getCategories() async {
+    final db = await dbHelper.database;
+    final List<Map<String, dynamic>> maps = await db.rawQuery(
+      'SELECT DISTINCT tag FROM shopping',
+    );
+    return maps.map((json) => json['tag'] as String).toList();
+  }
+
+  Future<List<ShoppingModel>> getItemsByCategory(String category) async {
+    final db = await dbHelper.database;
+    final List<Map<String, dynamic>> maps = await db.query(
+      'shopping',
+      where: 'tag = ?',
+      whereArgs: [category],
+    );
+    return maps.map((json) => ShoppingModel.fromJson(json)).toList();
+  }
+
+  Future<void> insertItem(ShoppingModel item) async {
+    final db = await dbHelper.database;
+    await db.insert(
+      'shopping',
+      item.toMap(),
+      conflictAlgorithm: ConflictAlgorithm.replace,
+    );
+  }
+
+  Future<void> updateItem(ShoppingModel item) async {
+    final db = await dbHelper.database;
+    await db.update(
+      'shopping',
+      item.toMap(),
+      where: 'id = ?',
+      whereArgs: [item.id],
+    );
+  }
+
+  Future<void> deleteItem(int id) async {
+    final db = await dbHelper.database;
+    await db.delete('shopping', where: 'id = ?', whereArgs: [id]);
+  }
+}
