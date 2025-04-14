@@ -1,5 +1,7 @@
 import 'package:dartactivity/repository/models/shopping_model.dart';
+import 'package:dartactivity/utils/enum_tags.dart';
 import 'package:dartactivity/utils/shopping_database.dart';
+import 'package:dartactivity/utils/shopping_helper.dart';
 import 'package:sqflite/sqflite.dart';
 
 class ShoppingListRepository {
@@ -12,11 +14,9 @@ class ShoppingListRepository {
   }
 
   Future<List<String>> getCategories() async {
-    final db = await dbHelper.database;
-    final List<Map<String, dynamic>> maps = await db.rawQuery(
-      'SELECT DISTINCT tag FROM shopping',
-    );
-    return maps.map((json) => json['tag'] as String).toList();
+    return GroceryCategory.values.map((category) {
+      return ShoppingHelper().formatCategory(category);
+    }).toList();
   }
 
   Future<List<ShoppingModel>> getItemsByCategory(String category) async {

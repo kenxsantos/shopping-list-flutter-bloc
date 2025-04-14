@@ -1,5 +1,5 @@
-import 'package:dartactivity/ui/pages/home/widgets/all_list_widget/all_list_widget.dart';
 import 'package:dartactivity/ui/pages/home/widgets/category_widget/category_widget.dart';
+import 'package:dartactivity/ui/pages/home/widgets/list_by_category_widget/list_by_category_widget.dart';
 import 'package:flutter/material.dart';
 
 class HomeLayout extends StatelessWidget {
@@ -7,11 +7,13 @@ class HomeLayout extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(top: 80.0),
+    return Container(
+      color: Colors.white,
+      padding: const EdgeInsets.all(8),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
-        children: [CategoryWidget(), AllListWidget()],
+        mainAxisSize: MainAxisSize.max,
+        children: [CategoryWidget(), ListByCategoryWidget()],
       ),
     );
   }
