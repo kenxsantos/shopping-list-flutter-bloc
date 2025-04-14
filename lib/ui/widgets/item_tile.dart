@@ -1,17 +1,22 @@
+import 'package:dartactivity/repository/models/shopping_model.dart';
+import 'package:dartactivity/ui/pages/home/bloc/shopping_bloc.dart';
+import 'package:dartactivity/ui/widgets/item_delete_dialog.dart';
+import 'package:dartactivity/ui/widgets/item_edit_dialog.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 // ignore: must_be_immutable
 class ItemTile extends StatefulWidget {
   ItemTile({
+    required this.id,
     required this.name,
     required this.tag,
     required this.isFavorite,
     super.key,
   });
-
+  final int id;
   final String name;
   final String tag;
-
   bool isFavorite;
 
   @override
@@ -49,6 +54,7 @@ class _ItemTileState extends State<ItemTile> {
                   PopupMenuItem(
                     onTap: () {
                       //TODO: Create a edit item dialog
+                      _showEditDialog(context);
                     },
                     child: Row(
                       children: [
@@ -61,6 +67,7 @@ class _ItemTileState extends State<ItemTile> {
                   PopupMenuItem(
                     onTap: () {
                       //TODO; Create a delete confirmation dialog
+                      _showDeleteConfirmation(context);
                     },
                     child: Row(
                       children: [
@@ -74,6 +81,43 @@ class _ItemTileState extends State<ItemTile> {
           ),
         ],
       ),
+    );
+  }
+
+  void _showEditDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder:
+          (context) => EditDialog(
+            id: widget.id,
+            currentName: widget.name,
+            currentTag: widget.tag,
+            currentIsFavorite: widget.isFavorite,
+            onSave: (newName, newTag, newIsFavorite) {
+              final updatedItem = ShoppingModel(
+                id: widget.id,
+                name: newName,
+                tag: newTag,
+                isFavorite: newIsFavorite,
+              );
+              context.read<ShoppingBloc>().add(UpdateItem(item: updatedItem));
+            },
+          ),
+    );
+  }
+
+  void _showDeleteConfirmation(BuildContext context) {
+    showDialog(
+      context: context,
+      builder:
+          (context) => DeleteConfirmationDialog(
+            id: widget.id.toString(),
+            onDelete: () {
+              context.read<ShoppingBloc>().add(
+                DeleteItem(item: widget.id.toString()),
+              );
+            },
+          ),
     );
   }
 }

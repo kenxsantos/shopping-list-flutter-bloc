@@ -9,28 +9,6 @@ extension ListByCategoryStatusX on ListByCategoryStatus {
   bool get isError => this == ListByCategoryStatus.error;
 }
 
-class AllListState extends Equatable {
-  const AllListState({
-    this.status = ListByCategoryStatus.initial,
-    this.items = const [],
-  });
-  final ListByCategoryStatus status;
-  final List<ShoppingModel> items;
-
-  @override
-  List<Object?> get props => [status, items];
-
-  AllListState copyWith({
-    ListByCategoryStatus? status,
-    List<ShoppingModel>? items,
-  }) {
-    return AllListState(
-      status: status ?? this.status,
-      items: items ?? this.items,
-    );
-  }
-}
-
 class ListByCategoryState extends Equatable {
   const ListByCategoryState({
     this.status = ListByCategoryStatus.initial,

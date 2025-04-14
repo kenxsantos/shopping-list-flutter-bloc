@@ -30,6 +30,7 @@ class ListByCategorySuccessWidget extends StatelessWidget {
           return Card(
             color: Colors.grey[800],
             child: ItemTile(
+              id: item.id ?? 0,
               name: item.name,
               tag: item.tag,
               isFavorite: item.isFavorite,

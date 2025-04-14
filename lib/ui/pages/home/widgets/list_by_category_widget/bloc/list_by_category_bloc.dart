@@ -42,10 +42,7 @@ class ListByCategoryBloc
           selectedCategory: event.categoryName,
         ),
       );
-
-      print("Items by category: ${state.items}");
-    } catch (error, stacktrace) {
-      print(stacktrace);
+    } catch (error) {
       emit(state.copyWith(status: ListByCategoryStatus.error));
     }
   }
