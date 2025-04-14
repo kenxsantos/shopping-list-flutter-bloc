@@ -14,9 +14,7 @@ class CategoryWidget extends StatelessWidget {
         return Container(
           child:
               state.status.isSuccess
-                  ? Expanded(
-                    child: CategorySuccessWidget(categories: state.categories),
-                  )
+                  ? CategorySuccessWidget(categories: state.categories)
                   : state.status.isLoading
                   ? const Center(child: CircularProgressIndicator())
                   : state.status.isError

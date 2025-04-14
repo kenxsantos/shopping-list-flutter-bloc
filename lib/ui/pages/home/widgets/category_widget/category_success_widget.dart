@@ -1,4 +1,7 @@
+import 'package:dartactivity/ui/pages/home/widgets/list_by_category_widget/bloc/list_by_category_bloc.dart';
+import 'package:dartactivity/ui/widgets/category_button.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class CategorySuccessWidget extends StatelessWidget {
   const CategorySuccessWidget({required this.categories, super.key});
@@ -7,38 +10,34 @@ class CategorySuccessWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Expanded(
-      child: ListView.builder(
-        itemCount: categories.length,
-        itemBuilder: (context, index) {
-          final item = categories[index];
-          return Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                item,
-                style: const TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              IconButton(
-                icon: const Icon(Icons.delete),
+    return SingleChildScrollView(
+      scrollDirection: Axis.horizontal,
+      padding: const EdgeInsets.symmetric(vertical: 8.0),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: [
+          CategoryButton(
+            label: "All Categories",
+            onPressed: () {
+              context.read<ListByCategoryBloc>().add(GetAllListsEvent());
+            },
+          ),
+          ...List.generate(categories.length, (index) {
+            final item = categories[index];
+            return Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 8.0),
+              child: CategoryButton(
+                label: item,
                 onPressed: () {
-                  // Handle delete action here
+                  context.read<ListByCategoryBloc>().add(
+                    GetListByCategory(categoryName: item),
+                  );
                 },
               ),
-            ],
-          );
-        },
+            );
+          }),
+        ],
       ),
     );
-
-    // ListView.builder(
-    //   itemCount: categories.length,
-    //   itemBuilder: (context, index) {
-    //     return;
-    //   },
-    // );
   }
 }
