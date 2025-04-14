@@ -1,11 +1,11 @@
 class ShoppingModel {
-  final int id;
+  final int? id;
   final String name;
   final String tag;
   final bool isFavorite;
 
   ShoppingModel({
-    required this.id,
+    this.id,
     required this.name,
     required this.tag,
     required this.isFavorite,
@@ -21,11 +21,16 @@ class ShoppingModel {
   }
 
   factory ShoppingModel.fromJson(Map<String, dynamic> json) {
-    return ShoppingModel(
-      id: json['id'],
-      name: json['name'],
-      tag: json['tag'],
-      isFavorite: json['isFavorite'] == 1,
-    );
+    try {
+      return ShoppingModel(
+        id: json['id'] as int?,
+        name: json['name'] ?? '',
+        tag: json['tag'] ?? '',
+        isFavorite: (json['isFavorite'] ?? 0) == 1,
+      );
+    } catch (e) {
+      print("Error parsing ShoppingModel: $e");
+      throw FormatException("Invalid ShoppingModel JSON: $json");
+    }
   }
 }

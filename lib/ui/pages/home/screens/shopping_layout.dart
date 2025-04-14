@@ -12,7 +12,7 @@ class HomeLayout extends StatelessWidget {
       padding: const EdgeInsets.all(8),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisSize: MainAxisSize.max,
+        mainAxisSize: MainAxisSize.min,
         children: [CategoryWidget(), ListByCategoryWidget()],
       ),
     );

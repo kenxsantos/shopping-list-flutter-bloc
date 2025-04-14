@@ -2,7 +2,6 @@ import 'package:dartactivity/repository/models/shopping_model.dart';
 import 'package:dartactivity/utils/enum_tags.dart';
 import 'package:dartactivity/utils/shopping_database.dart';
 import 'package:dartactivity/utils/shopping_helper.dart';
-import 'package:sqflite/sqflite.dart';
 
 class ShoppingListRepository {
   final ShoppingDatabase dbHelper = ShoppingDatabase.instance;
@@ -26,19 +25,22 @@ class ShoppingListRepository {
       where: 'tag = ?',
       whereArgs: [category],
     );
+    try {
+      return maps.map((json) => ShoppingModel.fromJson(json)).toList();
+    } catch (e) {
+      print("Error converting database rows to ShoppingModel: $e");
+      rethrow;
+    }
+  }
+
+  Future<List<ShoppingModel>> addItem(ShoppingModel item) async {
+    final db = await dbHelper.database;
+    await db.insert('shopping', item.toMap());
+    final List<Map<String, dynamic>> maps = await db.query('shopping');
     return maps.map((json) => ShoppingModel.fromJson(json)).toList();
   }
 
-  Future<void> insertItem(ShoppingModel item) async {
-    final db = await dbHelper.database;
-    await db.insert(
-      'shopping',
-      item.toMap(),
-      conflictAlgorithm: ConflictAlgorithm.replace,
-    );
-  }
-
-  Future<void> updateItem(ShoppingModel item) async {
+  Future<List<ShoppingModel>> updateItem(ShoppingModel item) async {
     final db = await dbHelper.database;
     await db.update(
       'shopping',
@@ -46,10 +48,17 @@ class ShoppingListRepository {
       where: 'id = ?',
       whereArgs: [item.id],
     );
+    final List<Map<String, dynamic>> maps = await db.query('shopping');
+    return maps.map((json) => ShoppingModel.fromJson(json)).toList();
   }
 
-  Future<void> deleteItem(int id) async {
+  Future<int> deleteItem(String id) async {
     final db = await dbHelper.database;
-    await db.delete('shopping', where: 'id = ?', whereArgs: [id]);
+    final int rowsDeleted = await db.delete(
+      'shopping',
+      where: 'id = ?',
+      whereArgs: [id],
+    );
+    return rowsDeleted;
   }
 }
