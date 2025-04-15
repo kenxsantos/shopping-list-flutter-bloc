@@ -1,6 +1,6 @@
 import 'package:dartactivity/repository/models/shopping_model.dart';
-import 'package:dartactivity/ui/pages/home/bloc/shopping_bloc.dart';
 import 'package:dartactivity/ui/pages/home/screens/shopping_layout.dart';
+import 'package:dartactivity/ui/pages/home/widgets/list_by_category_widget/bloc/list_by_category_bloc.dart';
 import 'package:dartactivity/ui/widgets/item_add_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -42,23 +42,17 @@ class _ShoppingHomeState extends State<ShoppingHome> {
                           tag: addedTag,
                           isFavorite: addedFavorite,
                         );
-                        context.read<ShoppingBloc>().add(
-                          AddItem(item: newItem),
+                        context.read<ListByCategoryBloc>().add(
+                          ShoppingAddItem(item: newItem),
                         );
                       },
                     ),
               );
             },
           ),
-          IconButton(
-            icon: Icon(
-              Icons.favorite_outline_outlined,
-              color: Colors.grey[800],
-            ),
-            onPressed: () {
-              //TODO: Favorites items to shopping list
-            },
-          ),
+          // ShoppingHelper.countIconButton(
+          //   icon: Icon(Icons.favorite_border_outlined),
+          // ),
         ],
       ),
       bottomNavigationBar: BottomAppBar(

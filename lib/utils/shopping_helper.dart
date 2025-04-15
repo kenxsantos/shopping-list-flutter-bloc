@@ -1,16 +1,4 @@
-// import 'package:dartactivity/ui/pages/home/widgets/all_list_widget/bloc/all_list_bloc.dart';
-// import 'package:dartactivity/ui/pages/home/widgets/all_list_widget/bloc/all_list_state.dart';
-// import 'package:dartactivity/repository/models/shopping_model.dart';
-// import 'package:dartactivity/utils/enum_tags.dart';
-// import 'package:dartactivity/utils/shopping_database.dart';
-// import 'package:flutter/material.dart';
-// import 'package:flutter_bloc/flutter_bloc.dart';
-
-import 'package:dartactivity/ui/pages/home/widgets/list_by_category_widget/bloc/list_by_category_bloc.dart';
 import 'package:dartactivity/utils/enum_tags.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 
 class ShoppingHelper {
   String formatCategory(GroceryCategory category) {
@@ -58,6 +46,31 @@ class ShoppingHelper {
         return GroceryCategory.cleaningSupplies;
     }
   }
+
+  // static Widget countIconButton({required Icon icon}) {
+  //   return BlocBuilder<ShoppingBloc, ShoppingAllListState>(
+  //     builder: (context, state) {
+  //       int countItem = 0;
+
+  //       if (state.status.isAllItems) {
+  //         countItem = state.items.where((item) => item.isFavorite).length;
+  //         return IconButton(
+  //           enableFeedback: false,
+  //           icon: Badge.count(count: countItem, child: icon),
+  //           color: Colors.grey[800],
+  //           onPressed: () => {},
+  //         );
+  //       }
+
+  //       return IconButton(
+  //         enableFeedback: false,
+  //         icon: Badge.count(count: 0, child: icon),
+  //         color: Colors.grey[800],
+  //         onPressed: () => {},
+  //       );
+  //     },
+  //   );
+  // }
 }
 //   String generateTextContent(List<ShoppingModel> items) {
 //     final header = 'Shopping List:\n';
