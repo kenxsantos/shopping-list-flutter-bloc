@@ -25,26 +25,36 @@ class ListByCategoryBloc
     emit(state.copyWith(status: ListByCategoryStatus.loading));
     try {
       final items = await shoppingRepository.getItems();
-      emit(state.copyWith(status: ListByCategoryStatus.success, items: items));
+      emit(state.copyWith(status: ListByCategoryStatus.allItems, items: items));
     } catch (_) {
       emit(state.copyWith(status: ListByCategoryStatus.error));
     }
   }
 
-  void _onGetListByCategory(
+  Future<void> _onGetListByCategory(
     GetListByCategory event,
     Emitter<ListByCategoryState> emit,
   ) async {
     try {
-      emit(state.copyWith(status: ListByCategoryStatus.loading));
-      final items = shoppingRepository.getItemsByCategory(event.categoryName);
-      emit(
-        state.copyWith(
-          status: ListByCategoryStatus.success,
-          items: await items,
-          selectedCategory: event.categoryName,
-        ),
-      );
+      if (event.categoryName == 'All') {
+        emit(state.copyWith(status: ListByCategoryStatus.loading));
+        final items = await shoppingRepository.getItems();
+        emit(
+          state.copyWith(status: ListByCategoryStatus.allItems, items: items),
+        );
+      } else {
+        emit(state.copyWith(status: ListByCategoryStatus.loading));
+        final items = await shoppingRepository.getItemsByCategory(
+          event.categoryName,
+        );
+        emit(
+          state.copyWith(
+            status: ListByCategoryStatus.success,
+            items: items,
+            selectedCategory: event.categoryName,
+          ),
+        );
+      }
     } catch (error) {
       emit(state.copyWith(status: ListByCategoryStatus.error));
     }
@@ -54,11 +64,17 @@ class ListByCategoryBloc
     ShoppingAddItem event,
     Emitter<ListByCategoryState> emit,
   ) async {
-    emit(state.copyWith(status: ListByCategoryStatus.loading));
     try {
-      final items = await shoppingRepository.addItem(event.item);
-      emit(state.copyWith(status: ListByCategoryStatus.success, items: items));
-    } catch (_) {
+      final category = state.status.isAllItems ? "All" : event.item.tag;
+      final items = await shoppingRepository.addItem(event.item, category);
+      final status =
+          state.status.isAllItems
+              ? ListByCategoryStatus.allItems
+              : ListByCategoryStatus.success;
+      emit(state.copyWith(status: ListByCategoryStatus.loading));
+      await Future.delayed(const Duration(milliseconds: 500));
+      emit(state.copyWith(status: status, items: items));
+    } catch (error) {
       emit(state.copyWith(status: ListByCategoryStatus.error));
     }
   }
@@ -67,10 +83,14 @@ class ListByCategoryBloc
     ShoppingUpdateItem event,
     Emitter<ListByCategoryState> emit,
   ) async {
-    emit(state.copyWith(status: ListByCategoryStatus.loading));
     try {
-      final items = await shoppingRepository.updateItem(event.item);
-      emit(state.copyWith(status: ListByCategoryStatus.success, items: items));
+      final category = state.status.isAllItems ? "All" : event.item.tag;
+      final items = await shoppingRepository.updateItem(event.item, category);
+      final status =
+          state.status.isAllItems
+              ? ListByCategoryStatus.allItems
+              : ListByCategoryStatus.success;
+      emit(state.copyWith(status: status, items: items));
     } catch (_) {
       emit(state.copyWith(status: ListByCategoryStatus.error));
     }
@@ -80,10 +100,21 @@ class ListByCategoryBloc
     ShoppingDeleteItem event,
     Emitter<ListByCategoryState> emit,
   ) async {
-    emit(state.copyWith(status: ListByCategoryStatus.loading));
     try {
-      final items = await shoppingRepository.deleteItem(event.id, event.item);
-      emit(state.copyWith(status: ListByCategoryStatus.success, items: items));
+      final category = state.status.isAllItems ? "All" : event.item.tag;
+      final items = await shoppingRepository.deleteItem(
+        event.id,
+        event.item,
+        category,
+      );
+      final status =
+          state.status.isAllItems
+              ? ListByCategoryStatus.allItems
+              : ListByCategoryStatus.success;
+
+      emit(state.copyWith(status: ListByCategoryStatus.loading));
+      await Future.delayed(const Duration(milliseconds: 500));
+      emit(state.copyWith(status: status, items: items));
     } catch (e) {
       emit(state.copyWith(status: ListByCategoryStatus.error));
     }

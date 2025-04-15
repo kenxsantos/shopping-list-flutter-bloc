@@ -19,7 +19,9 @@ class CategorySuccessWidget extends StatelessWidget {
           CategoryButton(
             label: "All Categories",
             onPressed: () {
-              context.read<ListByCategoryBloc>().add(GetAllListsEvent());
+              context.read<ListByCategoryBloc>().add(
+                GetListByCategory(categoryName: "All"),
+              );
             },
           ),
           ...List.generate(categories.length, (index) {
