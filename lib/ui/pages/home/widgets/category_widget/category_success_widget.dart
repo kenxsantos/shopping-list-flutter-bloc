@@ -32,6 +32,7 @@ class CategorySuccessWidget extends StatelessWidget {
                   context.read<ListByCategoryBloc>().add(
                     GetListByCategory(categoryName: item),
                   );
+                  print("Selected category: $item");
                 },
               ),
             );

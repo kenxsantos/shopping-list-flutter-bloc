@@ -9,7 +9,6 @@ class CategoryBloc extends Bloc<CategoryEvent, CategoryState> {
   final ShoppingListRepository shoppingRepository;
   CategoryBloc({required this.shoppingRepository})
     : super(const CategoryState()) {
-    on<SelectCategory>(_onSelectCategory);
     on<GetCategories>(_onGetCategory);
   }
 
@@ -24,17 +23,5 @@ class CategoryBloc extends Bloc<CategoryEvent, CategoryState> {
       print(stacktrace);
       emit(state.copyWith(status: CategoryStatus.error));
     }
-  }
-
-  void _onSelectCategory(
-    SelectCategory event,
-    Emitter<CategoryState> emit,
-  ) async {
-    emit(
-      state.copyWith(
-        status: CategoryStatus.selected,
-        selectedCategory: event.category,
-      ),
-    );
   }
 }

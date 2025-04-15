@@ -1,7 +1,8 @@
 import 'package:dartactivity/repository/models/shopping_model.dart';
-import 'package:dartactivity/ui/pages/home/bloc/shopping_bloc.dart';
+import 'package:dartactivity/ui/pages/home/widgets/list_by_category_widget/bloc/list_by_category_bloc.dart';
 import 'package:dartactivity/ui/widgets/item_delete_dialog.dart';
 import 'package:dartactivity/ui/widgets/item_edit_dialog.dart';
+import 'package:dartactivity/ui/widgets/snackbar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -39,7 +40,24 @@ class _ItemTileState extends State<ItemTile> {
         children: [
           IconButton(
             onPressed: () {
-              //TODO; Create a favorite item dialog
+              setState(() {
+                widget.isFavorite = !widget.isFavorite;
+              });
+              final updateFavorite = ShoppingModel(
+                id: widget.id,
+                name: widget.name,
+                tag: widget.tag,
+                isFavorite: widget.isFavorite,
+              );
+              context.read<ListByCategoryBloc>().add(
+                ShoppingUpdateItem(item: updateFavorite),
+              );
+              showSnackBarMessage(
+                context,
+                widget.isFavorite
+                    ? 'Added to favorites'
+                    : 'Remove from favorites',
+              );
             },
             icon:
                 widget.isFavorite
@@ -53,7 +71,6 @@ class _ItemTileState extends State<ItemTile> {
                 (BuildContext context) => <PopupMenuEntry<String>>[
                   PopupMenuItem(
                     onTap: () {
-                      //TODO: Create a edit item dialog
                       _showEditDialog(context);
                     },
                     child: Row(
@@ -66,7 +83,6 @@ class _ItemTileState extends State<ItemTile> {
                   ),
                   PopupMenuItem(
                     onTap: () {
-                      //TODO; Create a delete confirmation dialog
                       _showDeleteConfirmation(context);
                     },
                     child: Row(
@@ -100,7 +116,9 @@ class _ItemTileState extends State<ItemTile> {
                 tag: newTag,
                 isFavorite: newIsFavorite,
               );
-              context.read<ShoppingBloc>().add(UpdateItem(item: updatedItem));
+              context.read<ListByCategoryBloc>().add(
+                ShoppingUpdateItem(item: updatedItem),
+              );
             },
           ),
     );
@@ -111,10 +129,16 @@ class _ItemTileState extends State<ItemTile> {
       context: context,
       builder:
           (context) => DeleteConfirmationDialog(
-            id: widget.id.toString(),
+            id: widget.id,
             onDelete: () {
-              context.read<ShoppingBloc>().add(
-                DeleteItem(item: widget.id.toString()),
+              final deletedItem = ShoppingModel(
+                id: widget.id,
+                name: widget.name,
+                tag: widget.tag,
+                isFavorite: widget.isFavorite,
+              );
+              context.read<ListByCategoryBloc>().add(
+                ShoppingDeleteItem(id: widget.id, item: deletedItem),
               );
             },
           ),

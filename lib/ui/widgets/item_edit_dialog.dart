@@ -14,7 +14,6 @@ class EditDialog extends StatefulWidget {
 
   EditDialog({
     super.key,
-
     required this.currentName,
     required this.currentTag,
     required this.currentIsFavorite,

@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 
 // ignore: must_be_immutable
 class DeleteConfirmationDialog extends StatelessWidget {
-  final String id;
+  final int id;
 
   final void Function() onDelete;
 
