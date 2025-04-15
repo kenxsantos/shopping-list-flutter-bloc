@@ -36,8 +36,7 @@ class ShoppingListRepository {
   Future<List<ShoppingModel>> addItem(ShoppingModel item) async {
     final db = await dbHelper.database;
     await db.insert('shopping', item.toMap());
-    final List<Map<String, dynamic>> maps = await db.query('shopping');
-    return maps.map((json) => ShoppingModel.fromJson(json)).toList();
+    return getItemsByCategory(item.tag);
   }
 
   Future<List<ShoppingModel>> updateItem(ShoppingModel item) async {
@@ -48,17 +47,22 @@ class ShoppingListRepository {
       where: 'id = ?',
       whereArgs: [item.id],
     );
-    final List<Map<String, dynamic>> maps = await db.query('shopping');
-    return maps.map((json) => ShoppingModel.fromJson(json)).toList();
+    return getItemsByCategory(item.tag);
   }
 
-  Future<int> deleteItem(String id) async {
+  Future<List<ShoppingModel>> deleteItem(int id, ShoppingModel item) async {
     final db = await dbHelper.database;
-    final int rowsDeleted = await db.delete(
+    await db.delete('shopping', where: 'id = ?', whereArgs: [id]);
+    return getItemsByCategory(item.tag);
+  }
+
+  Future<List<ShoppingModel>> getFavorites() async {
+    final db = await dbHelper.database;
+    final List<Map<String, dynamic>> maps = await db.query(
       'shopping',
-      where: 'id = ?',
-      whereArgs: [id],
+      where: 'isFavorite = ?',
+      whereArgs: [1],
     );
-    return rowsDeleted;
+    return maps.map((json) => ShoppingModel.fromJson(json)).toList();
   }
 }

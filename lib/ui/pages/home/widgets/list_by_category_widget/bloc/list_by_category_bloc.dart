@@ -13,6 +13,9 @@ class ListByCategoryBloc
     : super(const ListByCategoryState()) {
     on<GetListByCategory>(_onGetListByCategory);
     on<GetAllListsEvent>(_onGetLists);
+    on<ShoppingAddItem>(_onAddItem);
+    on<ShoppingUpdateItem>(_onUpdateItem);
+    on<ShoppingDeleteItem>(_onDeleteItem);
   }
 
   Future<void> _onGetLists(
@@ -43,6 +46,45 @@ class ListByCategoryBloc
         ),
       );
     } catch (error) {
+      emit(state.copyWith(status: ListByCategoryStatus.error));
+    }
+  }
+
+  Future<void> _onAddItem(
+    ShoppingAddItem event,
+    Emitter<ListByCategoryState> emit,
+  ) async {
+    emit(state.copyWith(status: ListByCategoryStatus.loading));
+    try {
+      final items = await shoppingRepository.addItem(event.item);
+      emit(state.copyWith(status: ListByCategoryStatus.success, items: items));
+    } catch (_) {
+      emit(state.copyWith(status: ListByCategoryStatus.error));
+    }
+  }
+
+  Future<void> _onUpdateItem(
+    ShoppingUpdateItem event,
+    Emitter<ListByCategoryState> emit,
+  ) async {
+    emit(state.copyWith(status: ListByCategoryStatus.loading));
+    try {
+      final items = await shoppingRepository.updateItem(event.item);
+      emit(state.copyWith(status: ListByCategoryStatus.success, items: items));
+    } catch (_) {
+      emit(state.copyWith(status: ListByCategoryStatus.error));
+    }
+  }
+
+  Future<void> _onDeleteItem(
+    ShoppingDeleteItem event,
+    Emitter<ListByCategoryState> emit,
+  ) async {
+    emit(state.copyWith(status: ListByCategoryStatus.loading));
+    try {
+      final items = await shoppingRepository.deleteItem(event.id, event.item);
+      emit(state.copyWith(status: ListByCategoryStatus.success, items: items));
+    } catch (e) {
       emit(state.copyWith(status: ListByCategoryStatus.error));
     }
   }
