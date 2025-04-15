@@ -26,6 +26,9 @@ class ShoppingListRepository {
       whereArgs: [category],
     );
     try {
+      if (category == 'All') {
+        return getItems();
+      }
       return maps.map((json) => ShoppingModel.fromJson(json)).toList();
     } catch (e) {
       print("Error converting database rows to ShoppingModel: $e");
@@ -33,13 +36,19 @@ class ShoppingListRepository {
     }
   }
 
-  Future<List<ShoppingModel>> addItem(ShoppingModel item) async {
+  Future<List<ShoppingModel>> addItem(
+    ShoppingModel item,
+    String category,
+  ) async {
     final db = await dbHelper.database;
     await db.insert('shopping', item.toMap());
-    return getItemsByCategory(item.tag);
+    return getItemsByCategory(category);
   }
 
-  Future<List<ShoppingModel>> updateItem(ShoppingModel item) async {
+  Future<List<ShoppingModel>> updateItem(
+    ShoppingModel item,
+    String category,
+  ) async {
     final db = await dbHelper.database;
     await db.update(
       'shopping',
@@ -47,13 +56,17 @@ class ShoppingListRepository {
       where: 'id = ?',
       whereArgs: [item.id],
     );
-    return getItemsByCategory(item.tag);
+    return getItemsByCategory(category);
   }
 
-  Future<List<ShoppingModel>> deleteItem(int id, ShoppingModel item) async {
+  Future<List<ShoppingModel>> deleteItem(
+    int id,
+    ShoppingModel item,
+    String category,
+  ) async {
     final db = await dbHelper.database;
     await db.delete('shopping', where: 'id = ?', whereArgs: [id]);
-    return getItemsByCategory(item.tag);
+    return getItemsByCategory(category);
   }
 
   Future<List<ShoppingModel>> getFavorites() async {
