@@ -12,7 +12,7 @@ class CategorySuccessWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return SingleChildScrollView(
       scrollDirection: Axis.horizontal,
-      padding: const EdgeInsets.symmetric(vertical: 8.0),
+      padding: const EdgeInsets.symmetric(vertical: 12.0),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
@@ -34,7 +34,6 @@ class CategorySuccessWidget extends StatelessWidget {
                   context.read<ListByCategoryBloc>().add(
                     GetListByCategory(categoryName: item),
                   );
-                  print("Selected category: $item");
                 },
               ),
             );
