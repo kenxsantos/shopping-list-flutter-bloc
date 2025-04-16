@@ -40,3 +40,17 @@ class ShoppingUpdateItem extends ListByCategoryEvent {
   @override
   List<Object?> get props => [item];
 }
+
+class SearchItem extends ListByCategoryEvent {
+  const SearchItem({required this.searchText});
+  final String searchText;
+  @override
+  List<Object?> get props => [searchText];
+}
+
+class SortItem extends ListByCategoryEvent {
+  const SortItem({required this.sortType});
+  final String sortType;
+  @override
+  List<Object?> get props => [sortType];
+}

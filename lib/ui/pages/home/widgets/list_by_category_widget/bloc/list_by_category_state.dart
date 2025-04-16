@@ -1,7 +1,15 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 part of 'list_by_category_bloc.dart';
 
-enum ListByCategoryStatus { initial, loading, success, error, allItems }
+enum ListByCategoryStatus {
+  initial,
+  loading,
+  success,
+  error,
+  allItems,
+  searchItem,
+  sortItem,
+}
 
 extension ListByCategoryStatusX on ListByCategoryStatus {
   bool get isInitial => this == ListByCategoryStatus.initial;
@@ -9,6 +17,8 @@ extension ListByCategoryStatusX on ListByCategoryStatus {
   bool get isSuccess => this == ListByCategoryStatus.success;
   bool get isError => this == ListByCategoryStatus.error;
   bool get isAllItems => this == ListByCategoryStatus.allItems;
+  bool get isSearchItem => this == ListByCategoryStatus.searchItem;
+  bool get isSortItem => this == ListByCategoryStatus.sortItem;
 }
 
 class ListByCategoryState extends Equatable {

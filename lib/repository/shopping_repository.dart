@@ -78,4 +78,36 @@ class ShoppingListRepository {
     );
     return maps.map((json) => ShoppingModel.fromJson(json)).toList();
   }
+
+  Future<List<ShoppingModel>> searchItem(String item) async {
+    final db = await dbHelper.database;
+    final searchKeyword = '%$item%';
+    final data = await db.query(
+      'shopping',
+      where: 'name COLLATE NOCASE LIKE ? OR tag COLLATE NOCASE LIKE ?',
+      whereArgs: [searchKeyword, searchKeyword],
+    );
+    return List.generate(data.length, (i) => ShoppingModel.fromJson(data[i]));
+  }
+
+  Future<List<ShoppingModel>> sortItem(String sortType, String category) async {
+    final db = await dbHelper.database;
+    final orderBy = sortType == "name" ? "name" : "id";
+
+    if (category == "All") {
+      final List<Map<String, dynamic>> maps = await db.query(
+        'shopping',
+        orderBy: orderBy,
+      );
+      return maps.map((json) => ShoppingModel.fromJson(json)).toList();
+    } else {
+      final List<Map<String, dynamic>> maps = await db.query(
+        'shopping',
+        where: 'tag = ?',
+        orderBy: orderBy,
+        whereArgs: [category],
+      );
+      return maps.map((json) => ShoppingModel.fromJson(json)).toList();
+    }
+  }
 }

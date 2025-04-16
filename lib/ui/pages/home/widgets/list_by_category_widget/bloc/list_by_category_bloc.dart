@@ -16,6 +16,8 @@ class ListByCategoryBloc
     on<ShoppingAddItem>(_onAddItem);
     on<ShoppingUpdateItem>(_onUpdateItem);
     on<ShoppingDeleteItem>(_onDeleteItem);
+    on<SearchItem>(_onSearchItem);
+    on<SortItem>(_onSortItem);
   }
 
   Future<void> _onGetLists(
@@ -40,7 +42,11 @@ class ListByCategoryBloc
         emit(state.copyWith(status: ListByCategoryStatus.loading));
         final items = await shoppingRepository.getItems();
         emit(
-          state.copyWith(status: ListByCategoryStatus.allItems, items: items),
+          state.copyWith(
+            status: ListByCategoryStatus.allItems,
+            items: items,
+            selectedCategory: event.categoryName,
+          ),
         );
       } else {
         emit(state.copyWith(status: ListByCategoryStatus.loading));
@@ -116,6 +122,52 @@ class ListByCategoryBloc
       await Future.delayed(const Duration(milliseconds: 500));
       emit(state.copyWith(status: status, items: items));
     } catch (e) {
+      emit(state.copyWith(status: ListByCategoryStatus.error));
+    }
+  }
+
+  Future<void> _onSearchItem(
+    SearchItem event,
+    Emitter<ListByCategoryState> emit,
+  ) async {
+    try {
+      emit(state.copyWith(status: ListByCategoryStatus.searchItem));
+      if (state.status.isSearchItem) {
+        final items = shoppingRepository.searchItem(event.searchText);
+        emit(state.copyWith(status: ListByCategoryStatus.loading));
+        emit(
+          state.copyWith(
+            status: ListByCategoryStatus.success,
+            items: await items,
+          ),
+        );
+      } else {
+        emit(state.copyWith(status: ListByCategoryStatus.searchItem));
+      }
+    } catch (error) {
+      emit(state.copyWith(status: ListByCategoryStatus.error));
+    }
+  }
+
+  Future<void> _onSortItem(
+    SortItem event,
+    Emitter<ListByCategoryState> emit,
+  ) async {
+    try {
+      emit(state.copyWith(status: ListByCategoryStatus.loading));
+      final category = state.selectedCategory;
+      final sortedItems = await shoppingRepository.sortItem(
+        event.sortType,
+        category,
+      );
+      emit(
+        state.copyWith(
+          status: ListByCategoryStatus.sortItem,
+          items: sortedItems,
+          selectedCategory: category,
+        ),
+      );
+    } catch (error) {
       emit(state.copyWith(status: ListByCategoryStatus.error));
     }
   }
