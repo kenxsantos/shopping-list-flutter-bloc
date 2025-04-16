@@ -1,4 +1,5 @@
 import 'package:dartactivity/repository/models/shopping_model.dart';
+import 'package:dartactivity/ui/pages/favorite/widgets/all_list_favorites/favorite_count_icon.dart';
 import 'package:dartactivity/ui/pages/home/screens/shopping_layout.dart';
 import 'package:dartactivity/ui/pages/home/widgets/list_by_category_widget/bloc/list_by_category_bloc.dart';
 import 'package:dartactivity/ui/widgets/item_add_dialog.dart';
@@ -50,9 +51,9 @@ class _ShoppingHomeState extends State<ShoppingHome> {
               );
             },
           ),
-          // ShoppingHelper.countIconButton(
-          //   icon: Icon(Icons.favorite_border_outlined),
-          // ),
+          FavoriteCountIcon(
+            icon: Icon(Icons.favorite_border_outlined, color: Colors.grey[800]),
+          ),
         ],
       ),
       bottomNavigationBar: BottomAppBar(
@@ -60,25 +61,22 @@ class _ShoppingHomeState extends State<ShoppingHome> {
         shape: CircularNotchedRectangle(),
         notchMargin: 6,
         color: Colors.grey[800],
-        child: Padding(
-          padding: const EdgeInsets.all(8),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              IconButton(
-                onPressed: () {
-                  //TODO: Navigate to home page
-                },
-                icon: Icon(Icons.home, color: Colors.white),
-              ),
-              IconButton(
-                onPressed: () {
-                  //TODO: Navigate to settings page
-                },
-                icon: Icon(Icons.settings, color: Colors.white),
-              ),
-            ],
-          ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            IconButton(
+              onPressed: () {
+                //TODO: Navigate to home page
+              },
+              icon: Icon(Icons.home, color: Colors.white),
+            ),
+            IconButton(
+              onPressed: () {
+                //TODO: Navigate to settings page
+              },
+              icon: Icon(Icons.settings, color: Colors.white),
+            ),
+          ],
         ),
       ),
       body: HomeLayout(),
