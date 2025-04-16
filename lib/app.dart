@@ -1,4 +1,5 @@
 import 'package:dartactivity/repository/shopping_repository.dart';
+import 'package:dartactivity/ui/pages/favorite/widgets/all_list_favorites/bloc/favorite_bloc.dart';
 import 'package:dartactivity/ui/pages/home/screens/shopping_home.dart';
 import 'package:dartactivity/ui/pages/home/widgets/category_widget/bloc/category_bloc.dart';
 import 'package:dartactivity/ui/pages/home/widgets/list_by_category_widget/bloc/list_by_category_bloc.dart';
@@ -25,6 +26,13 @@ class App extends StatelessWidget {
             create:
                 (context) => ListByCategoryBloc(
                   shoppingRepository: context.read<ShoppingListRepository>(),
+                ),
+          ),
+          BlocProvider(
+            create:
+                (context) => FavoriteBloc(
+                  shoppingListRepository:
+                      context.read<ShoppingListRepository>(),
                 ),
           ),
         ],

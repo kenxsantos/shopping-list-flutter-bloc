@@ -1,4 +1,5 @@
 import 'package:dartactivity/repository/models/shopping_model.dart';
+import 'package:dartactivity/ui/pages/favorite/widgets/all_list_favorites/bloc/favorite_bloc.dart';
 import 'package:dartactivity/ui/pages/home/widgets/list_by_category_widget/bloc/list_by_category_bloc.dart';
 import 'package:dartactivity/ui/widgets/item_delete_dialog.dart';
 import 'package:dartactivity/ui/widgets/item_edit_dialog.dart';
@@ -52,6 +53,7 @@ class _ItemTileState extends State<ItemTile> {
               context.read<ListByCategoryBloc>().add(
                 ShoppingUpdateItem(item: updateFavorite),
               );
+              context.read<FavoriteBloc>().add(GetAllFavoritesEvent());
               showSnackBarMessage(
                 context,
                 widget.isFavorite

@@ -110,4 +110,14 @@ class ShoppingListRepository {
       return maps.map((json) => ShoppingModel.fromJson(json)).toList();
     }
   }
+
+  Future<List<ShoppingModel>> getFavoriteItems() async {
+    final db = await dbHelper.database;
+    final List<Map<String, dynamic>> maps = await db.query(
+      'shopping',
+      where: 'isFavorite = ?',
+      whereArgs: [1],
+    );
+    return maps.map((json) => ShoppingModel.fromJson(json)).toList();
+  }
 }
