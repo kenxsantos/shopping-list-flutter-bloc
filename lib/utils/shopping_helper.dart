@@ -46,31 +46,6 @@ class ShoppingHelper {
         return GroceryCategory.cleaningSupplies;
     }
   }
-
-  // static Widget countIconButton({required Icon icon}) {
-  //   return BlocBuilder<ShoppingBloc, ShoppingAllListState>(
-  //     builder: (context, state) {
-  //       int countItem = 0;
-
-  //       if (state.status.isAllItems) {
-  //         countItem = state.items.where((item) => item.isFavorite).length;
-  //         return IconButton(
-  //           enableFeedback: false,
-  //           icon: Badge.count(count: countItem, child: icon),
-  //           color: Colors.grey[800],
-  //           onPressed: () => {},
-  //         );
-  //       }
-
-  //       return IconButton(
-  //         enableFeedback: false,
-  //         icon: Badge.count(count: 0, child: icon),
-  //         color: Colors.grey[800],
-  //         onPressed: () => {},
-  //       );
-  //     },
-  //   );
-  // }
 }
 //   String generateTextContent(List<ShoppingModel> items) {
 //     final header = 'Shopping List:\n';
